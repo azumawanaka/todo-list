@@ -1,0 +1,18 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+// Spacing
+@import "../../node_modules/bootstrap";
+
+.custom-field {
+    border: 0!important;
+    outline: 0;
+    background: transparent;
+    border-bottom: 0.5px solid rgba(189, 189, 189, 0.8)!important;
+}
