@@ -1872,14 +1872,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['user'],
   data: function data() {
     return {
-      errors: [],
+      summary_err: '',
+      desc_err: '',
+      ddate_err: '',
       summary: '',
       description: '',
       due_date: ''
@@ -1888,23 +1887,26 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     saveTask: function saveTask() {
       if (!this.summary) {
-        this.errors.push('Summary is required.');
+        this.summary_err = 'Summary is required.';
       }
 
       if (!this.description) {
-        this.errors.push('Description is required.');
+        this.desc_err = 'Description is required.';
       }
 
       if (!this.due_date) {
-        this.errors.push('Due date is required.');
+        this.due_date = 'Due date is required.';
       }
 
-      this.$emit('taskadded', {
-        user: this.user,
-        summary: this.summary,
-        description: this.description,
-        due_date: this.due_date
-      });
+      if (this.summary && this.description && this.due_date) {
+        this.$emit('taskadded', {
+          user: this.user,
+          summary: this.summary,
+          description: this.description,
+          due_date: this.due_date
+        });
+      }
+
       this.summary = '';
       this.description = '';
       this.due_date = '';
@@ -1937,8 +1939,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['tasks']
+  props: ['tasks'],
+  data: function data() {
+    return {
+      taskId: []
+    };
+  },
+  methods: {
+    updateActiveStatus: function updateActiveStatus() {
+      var res = axios.put("/tasks/".concat(this.taskId));
+      console.log(res.data);
+    }
+  }
 });
 
 /***/ }),
@@ -1976,13 +2002,13 @@ var app = new Vue({
     taskLists: function taskLists() {
       var _this2 = this;
 
-      axios.get('tasks').then(function (response) {
+      axios.get('/tasks/show').then(function (response) {
         _this2.tasks = response.data;
       });
     },
     saveTask: function saveTask(tasks) {
       this.tasks.push(tasks);
-      axios.post('/store', tasks).then(function (response) {
+      axios.post('/tasks/store', tasks).then(function (response) {
         $('#newTask').modal('toggle');
       })["catch"](function (error) {// error.response.data.errors
       });
@@ -43738,20 +43764,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.errors.length
-      ? _c("div", { staticClass: "col-md-12" }, [
-          _c("strong", [_vm._v("Please correct the following error(s):")]),
-          _vm._v(" "),
-          _c(
-            "ul",
-            _vm._l(_vm.errors, function(error) {
-              return _c("li", [_vm._v(_vm._s(error))])
-            }),
-            0
-          )
-        ])
-      : _vm._e(),
-    _vm._v(" "),
     _c("div", { staticClass: "modal-body" }, [
       _c("div", { staticClass: "form-group" }, [
         _c("input", {
@@ -43779,7 +43791,11 @@ var render = function() {
               _vm.summary = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _c("small", { staticClass: "text-danger" }, [
+          _vm._v(_vm._s(_vm.summary_err))
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
@@ -43809,7 +43825,11 @@ var render = function() {
               _vm.description = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _c("small", { staticClass: "text-danger" }, [
+          _vm._v(_vm._s(_vm.desc_err))
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group" }, [
@@ -43838,7 +43858,11 @@ var render = function() {
               _vm.due_date = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _c("small", { staticClass: "text-danger" }, [
+          _vm._v(_vm._s(_vm.ddate_err))
+        ])
       ])
     ]),
     _vm._v(" "),
@@ -43894,32 +43918,115 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    _vm._l(_vm.tasks, function(task) {
-      return _c("div", { staticClass: "form-check" }, [
-        _c("input", {
-          staticClass: "form-check-input",
-          attrs: { type: "checkbox", value: "", id: task.id }
-        }),
-        _vm._v(" "),
-        _c(
-          "label",
-          { staticClass: "form-check-label", attrs: { for: task.id } },
-          [
-            _vm._v("\n            " + _vm._s(task.summary) + " "),
-            _c("br"),
-            _vm._v(" "),
-            _c("small", { staticClass: "text-muted" }, [
-              _c("i", { staticClass: "fa fa-clock-o" }),
-              _vm._v(" " + _vm._s(task.due_date))
+  return _c("div", [
+    _c("h5", [_vm._v("Incomplete")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "col-md-12" },
+      _vm._l(_vm.tasks, function(task, tId) {
+        return task.status === 0
+          ? _c("div", { key: tId, staticClass: "incomplete mb-4" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.taskId,
+                    expression: "taskId"
+                  }
+                ],
+                staticClass: "form-check-input",
+                attrs: { name: "status[]", type: "checkbox", id: task.id },
+                domProps: {
+                  value: task.id,
+                  checked: Array.isArray(_vm.taskId)
+                    ? _vm._i(_vm.taskId, task.id) > -1
+                    : _vm.taskId
+                },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$a = _vm.taskId,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = task.id,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.taskId = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.taskId = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.taskId = $$c
+                      }
+                    },
+                    function($event) {
+                      return _vm.updateActiveStatus()
+                    }
+                  ]
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "label",
+                { staticClass: "form-check-label", attrs: { for: task.id } },
+                [
+                  _vm._v("\n                " + _vm._s(task.summary) + " "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("small", { staticClass: "text-muted" }, [
+                    _c("i", { staticClass: "fa fa-clock-o" }),
+                    _vm._v(" " + _vm._s(task.due_date))
+                  ])
+                ]
+              )
             ])
-          ]
-        )
-      ])
-    }),
-    0
-  )
+          : _vm._e()
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c("h5", [_vm._v("Completed")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "col-md-12" },
+      _vm._l(_vm.tasks, function(task, tId) {
+        return task.status === 1
+          ? _c("div", { key: tId, staticClass: "completed" }, [
+              _c("input", {
+                staticClass: "form-check-input",
+                attrs: { type: "checkbox", id: task.id, checked: "" },
+                domProps: { value: task.id }
+              }),
+              _vm._v(" "),
+              _c(
+                "label",
+                {
+                  staticClass: "form-check-label text-muted",
+                  attrs: { for: task.id }
+                },
+                [
+                  _vm._v("\n                " + _vm._s(task.summary) + " "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("small", [
+                    _c("i", { staticClass: "fa fa-clock-o" }),
+                    _vm._v(" " + _vm._s(task.due_date))
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

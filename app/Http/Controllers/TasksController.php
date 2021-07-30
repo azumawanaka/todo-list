@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Events\TaskAdded;
 use Illuminate\Http\Response;
+use App\Http\Requests\Request;
 use App\Http\Requests\TaskFormRequest;
 use App\Services\TaskService;
 use App\Models\Task;
@@ -41,14 +43,18 @@ class TasksController extends Controller
             return ['status' => 'New task added!'];
        } catch (\Throwable $th) {
             return response()->json([
-                'errors' => "Password does't match",
+                'errors' => "Required fields are empty",
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
        }
     }
 
-    public function taskLists()
+    public function show(): Collection
     {
         return Task::with('user')->get();
-        // return $this->taskService->getTasks();
+    }
+
+    public function update(int $taskId)
+    {
+        return response($taskId);
     }
 }

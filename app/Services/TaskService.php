@@ -28,9 +28,4 @@ class TaskService
 
         return $task;
     }
-
-    public function getTasks(): Task
-    {
-        return Task::with('user')->get();
-    }
 }

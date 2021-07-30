@@ -4,19 +4,8 @@
 <div class="container">
     <div class="tasks">
         <a href="javascript:;" class="btn btn-light pl-0 mb-3" data-toggle="modal" data-target="#newTask"><i class="fa fa-plus"></i> Add new task</a>
-        <div class="incomplete mb-4">
-            <h5>Incomplete</h5>
-            <task-lists :tasks="tasks"></task-lists>
-        </div>
-        <div class="completed">
-            <h5>Completed</h5>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="completed_1" checked disabled>
-                <label class="form-check-label" for="completed_1">
-                    Respond to email
-                </label>
-            </div>
-        </div>
+
+        <task-lists :tasks="tasks"></task-lists>
     </div>
 
     <!-- Modal -->

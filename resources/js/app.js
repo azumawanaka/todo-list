@@ -8,7 +8,7 @@ Vue.component('task-form', require('./components/TaskForm.vue').default);
 const app = new Vue({
     el: '#app',
     data: {
-        tasks: []
+        tasks: [],
     },
     created() {
         this.taskLists();
@@ -24,14 +24,14 @@ const app = new Vue({
     },
     methods: {
         taskLists() {
-            axios.get('tasks').then(response => {
+            axios.get('/tasks/show').then(response => {
                 this.tasks = response.data;
             });
         },
         saveTask(tasks) {
             this.tasks.push(tasks);
 
-            axios.post('/store', tasks).then(function (response) {
+            axios.post('/tasks/store', tasks).then(function (response) {
                 $('#newTask').modal('toggle');
             }).catch(function (error) {
                 // error.response.data.errors

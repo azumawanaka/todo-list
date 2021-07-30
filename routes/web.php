@@ -21,7 +21,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/', [TasksController::class, 'index']);
-Route::get('tasks', [TasksController::class, 'taskLists']);
-Route::post('store', [TasksController::class, 'store']);
-// Route::get('messages', 'ChatsController@fetchMessages');
-// Route::post('messages', 'ChatsController@sendMessage');
+// Route::get('tasks', [TasksController::class, 'taskLists']);
+// Route::post('store', [TasksController::class, 'store']);
+// Route::put('tasks/{taskId}', [TasksController::class, 'update']);
+
+Route::resource('tasks', TasksController::class);
