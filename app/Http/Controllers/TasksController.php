@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Events\TaskStatusUpdated;
 use App\Events\TaskAdded;
 use Illuminate\Http\Response;
-use App\Http\Requests\Request;
 use App\Http\Requests\TaskFormRequest;
 use App\Services\TaskService;
 use App\Models\Task;
@@ -48,13 +48,24 @@ class TasksController extends Controller
        }
     }
 
-    public function show(): Collection
+    public function show()
     {
         return Task::with('user')->get();
     }
 
     public function update(int $taskId)
     {
-        return response($taskId);
+        try {
+            $user = Auth::user();
+            $tasks = $this->taskService->updateTask($taskId);
+
+            broadcast(new TaskAdded($user, $tasks))->toOthers();
+
+            return ['status' => 'Task updated!'];
+        } catch (\Throwable $th) {
+            return response()->json([
+                'errors' => "Error occured",
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 }

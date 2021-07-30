@@ -28,4 +28,20 @@ class TaskService
 
         return $task;
     }
+
+    public function updateTask(int $taskId): Task
+    {
+        $task = new Task();
+        $task = $task->where('id', $taskId)->first();
+
+        if ($task->status === 0) {
+            $task->status = 1;
+        } else {
+            $task->status = 0;
+        }
+
+        $task->save();
+
+        return $task;
+    }
 }

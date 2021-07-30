@@ -2008,7 +2008,7 @@ var app = new Vue({
     },
     saveTask: function saveTask(tasks) {
       this.tasks.push(tasks);
-      axios.post('/tasks/store', tasks).then(function (response) {
+      axios.post('/tasks', tasks).then(function (response) {
         $('#newTask').modal('toggle');
       })["catch"](function (error) {// error.response.data.errors
       });
