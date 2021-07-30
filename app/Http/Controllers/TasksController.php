@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use App\Events\TaskStatusUpdated;
 use App\Events\TaskAdded;
 use Illuminate\Http\Response;
 use App\Http\Requests\TaskFormRequest;
@@ -34,38 +33,26 @@ class TasksController extends Controller
 
     public function store(TaskFormRequest $request)
     {
-       try {
-            $user = Auth::user();
-            $tasks = $this->taskService->storeTask($user, $request);
+        $user = Auth::user();
+        $task = $this->taskService->storeTask($user, $request);
 
-            broadcast(new TaskAdded($user, $tasks))->toOthers();
+        broadcast(new TaskAdded($user, $task))->toOthers();
 
-            return ['status' => 'New task added!'];
-       } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Required fields are empty",
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-       }
+        return ['status' => 'New task added!'];
     }
 
-    public function show()
+    public function fetchTasks()
     {
         return Task::with('user')->get();
     }
 
     public function update(int $taskId)
     {
-        try {
-            $user = Auth::user();
-            $tasks = $this->taskService->updateTask($taskId);
+        $user = Auth::user();
+        $task = $this->taskService->updateTask($taskId);
 
-            broadcast(new TaskAdded($user, $tasks))->toOthers();
+        broadcast(new TaskAdded($user, $task))->toOthers();
 
-            return ['status' => 'Task updated!'];
-        } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Error occured",
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        return ['status' => 'Task updated!'];
     }
 }

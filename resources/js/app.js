@@ -24,7 +24,7 @@ const app = new Vue({
     },
     methods: {
         taskLists() {
-            axios.get('/tasks/show').then(response => {
+            axios.get('/tasks/lists').then(response => {
                 this.tasks = response.data;
             });
         },

@@ -2002,7 +2002,7 @@ var app = new Vue({
     taskLists: function taskLists() {
       var _this2 = this;
 
-      axios.get('/tasks/show').then(function (response) {
+      axios.get('/tasks/lists').then(function (response) {
         _this2.tasks = response.data;
       });
     },
