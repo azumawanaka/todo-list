@@ -1,14 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\TasksController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TasksController;
+use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
 Route::middleware('auth')->group(function() {
     Route::get('/', [HomeController::class, 'index']);
-    Route::resource('tasks', TasksController::class, [
-        'only' => ['index', 'store', 'update', 'destroy']
-    ]);
+    Route::resource('tasks', TasksController::class);
 });

@@ -20,6 +20,7 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->dateTime('due_date');
             $table->dateTime('completed_at')->default(null)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

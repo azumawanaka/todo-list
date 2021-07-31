@@ -18,18 +18,18 @@ class TaskAdded implements ShouldBroadcast
     /**
      * Message details
      *
-     * @var Task $tasks
+     * @var Task $task
      */
-    public $tasks;
+    public $task;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Task $tasks)
+    public function __construct(Task $task)
     {
-        $this->tasks = $tasks;
+        $this->task = $task;
     }
 
     /**

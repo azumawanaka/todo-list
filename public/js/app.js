@@ -1834,6 +1834,111 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AlertBox.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AlertBox.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['user']
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/EditTaskForm.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/EditTaskForm.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      task: {
+        id: '',
+        summary: '',
+        description: '',
+        due_date: ''
+      }
+    };
+  },
+  methods: {
+    editTask: function editTask(e) {
+      var _this = this;
+
+      e.preventDefault();
+      axios.put("/tasks/".concat(1), this.task).then(function (response) {
+        _this.$emit('task:edited', response.data);
+
+        _this.task.summary = '';
+        _this.task.description = '';
+        _this.task.due_date = '';
+        $('#editTask').modal('toggle');
+      })["catch"](function (error) {// let $err = error.response.data.errors
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TaskForm.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TaskForm.vue?vue&type=script&lang=js& ***!
@@ -1872,43 +1977,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: [],
   data: function data() {
     return {
-      summary_err: '',
-      desc_err: '',
-      ddate_err: '',
-      summary: '',
-      description: '',
-      due_date: ''
+      task: {
+        summary: '',
+        description: '',
+        due_date: ''
+      }
     };
   },
   methods: {
-    saveTask: function saveTask() {
-      if (!this.summary) {
-        this.summary_err = 'Summary is required.';
-      }
+    createTask: function createTask(e) {
+      var _this = this;
 
-      if (!this.description) {
-        this.desc_err = 'Description is required.';
-      }
+      e.preventDefault();
+      axios.post('/tasks', this.task).then(function (response) {
+        _this.$emit('task:created', response.data);
 
-      if (!this.due_date) {
-        this.due_date = 'Due date is required.';
-      }
-
-      if (this.summary && this.description && this.due_date) {
-        this.$emit('taskadded', {
-          summary: this.summary,
-          description: this.description,
-          due_date: this.due_date
-        });
-      }
-
-      this.summary = '';
-      this.description = '';
-      this.due_date = '';
+        _this.task.summary = '';
+        _this.task.description = '';
+        _this.task.due_date = '';
+        $('#newTask').modal('toggle');
+      })["catch"](function (error) {// let $err = error.response.data.errors
+      });
     }
   }
 });
@@ -1951,26 +2049,84 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       tasks: [],
-      taskId: []
+      summary: '',
+      description: '',
+      due_date: ''
     };
   },
   created: function created() {
+    var _this = this;
+
     this.taskLists();
+    Echo["private"]('todo').listen('TaskAdded', function (e) {
+      _this.tasks.push({
+        summary: e.task.summary,
+        description: e.task.description,
+        due_date_human: e.task.due_date_human
+      });
+    });
+  },
+  updated: function updated() {
+    this.taskLists();
+    Echo["private"]('todo').listen('TaskAdded');
   },
   methods: {
     taskLists: function taskLists() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/tasks').then(function (response) {
-        _this.tasks = response.data;
+        _this2.tasks = response.data;
       });
     },
-    updateActiveStatus: function updateActiveStatus(task) {
-      axios.put("/tasks/".concat(this.taskId), task);
+    updateTaskStatus: function updateTaskStatus(task) {
+      var _this3 = this;
+
+      axios.put("/tasks/".concat(task.id), task).then(function (response) {
+        _this3.tasks = response.data;
+      });
+    },
+    taskCreated: function taskCreated(task) {
+      this.tasks.push(task);
+    },
+    editTask: function editTask(task) {
+      this.tasks.push(task);
+    },
+    // taskEdited(task) {
+    //     this.tasks.push(task)
+    // },
+    deleteTask: function deleteTask(task) {
+      var _this4 = this;
+
+      if (confirm("Are you sure you want to delete this task?")) {
+        axios["delete"]("/tasks/".concat(task.id), task).then(function (response) {
+          _this4.tasks = response.data;
+        });
+      }
     }
   }
 });
@@ -1988,38 +2144,10 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js").default;
 Vue.component('task-lists', __webpack_require__(/*! ./components/TaskLists.vue */ "./resources/js/components/TaskLists.vue").default);
 Vue.component('task-form', __webpack_require__(/*! ./components/TaskForm.vue */ "./resources/js/components/TaskForm.vue").default);
+Vue.component('task-edit-form', __webpack_require__(/*! ./components/EditTaskForm.vue */ "./resources/js/components/EditTaskForm.vue").default);
+Vue.component('alert-box', __webpack_require__(/*! ./components/AlertBox.vue */ "./resources/js/components/AlertBox.vue").default);
 var app = new Vue({
-  el: '#app',
-  data: {
-    tasks: []
-  },
-  created: function created() {
-    this.taskLists(); // Echo.private('todo')
-    // .listen('taskadded', (e) => {
-    //     this.tasks.push({
-    //         user: e.user,
-    //         summary: e.tasks.summary,
-    //         description: e.tasks.description,
-    //         due_date: e.tasks.due_date,
-    //     });
-    // });
-  },
-  methods: {
-    taskLists: function taskLists() {
-      var _this = this;
-
-      axios.get('/tasks').then(function (response) {
-        _this.tasks = response.data;
-      });
-    },
-    saveTask: function saveTask(tasks) {
-      this.tasks.push(tasks);
-      axios.post('/tasks', tasks).then(function (response) {
-        $('#newTask').modal('toggle');
-      })["catch"](function (error) {// error.response.data.errors
-      });
-    }
-  }
+  el: '#app'
 });
 
 /***/ }),
@@ -43609,6 +43737,84 @@ runtime.setup(pusher_Pusher);
 
 /***/ }),
 
+/***/ "./resources/js/components/AlertBox.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/AlertBox.vue ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _AlertBox_vue_vue_type_template_id_9404768c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AlertBox.vue?vue&type=template&id=9404768c& */ "./resources/js/components/AlertBox.vue?vue&type=template&id=9404768c&");
+/* harmony import */ var _AlertBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AlertBox.vue?vue&type=script&lang=js& */ "./resources/js/components/AlertBox.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
+  _AlertBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _AlertBox_vue_vue_type_template_id_9404768c___WEBPACK_IMPORTED_MODULE_0__.render,
+  _AlertBox_vue_vue_type_template_id_9404768c___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AlertBox.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/EditTaskForm.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/EditTaskForm.vue ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _EditTaskForm_vue_vue_type_template_id_0104c67e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EditTaskForm.vue?vue&type=template&id=0104c67e& */ "./resources/js/components/EditTaskForm.vue?vue&type=template&id=0104c67e&");
+/* harmony import */ var _EditTaskForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EditTaskForm.vue?vue&type=script&lang=js& */ "./resources/js/components/EditTaskForm.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
+  _EditTaskForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _EditTaskForm_vue_vue_type_template_id_0104c67e___WEBPACK_IMPORTED_MODULE_0__.render,
+  _EditTaskForm_vue_vue_type_template_id_0104c67e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/EditTaskForm.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/TaskForm.vue":
 /*!**********************************************!*\
   !*** ./resources/js/components/TaskForm.vue ***!
@@ -43687,6 +43893,38 @@ component.options.__file = "resources/js/components/TaskLists.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/AlertBox.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/AlertBox.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AlertBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AlertBox.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AlertBox.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AlertBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+
+/***/ }),
+
+/***/ "./resources/js/components/EditTaskForm.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/EditTaskForm.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditTaskForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./EditTaskForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/EditTaskForm.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditTaskForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+
+/***/ }),
+
 /***/ "./resources/js/components/TaskForm.vue?vue&type=script&lang=js&":
 /*!***********************************************************************!*\
   !*** ./resources/js/components/TaskForm.vue?vue&type=script&lang=js& ***!
@@ -43716,6 +43954,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskLists_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TaskLists.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TaskLists.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskLists_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AlertBox.vue?vue&type=template&id=9404768c&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/AlertBox.vue?vue&type=template&id=9404768c& ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AlertBox_vue_vue_type_template_id_9404768c___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AlertBox_vue_vue_type_template_id_9404768c___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AlertBox_vue_vue_type_template_id_9404768c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AlertBox.vue?vue&type=template&id=9404768c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AlertBox.vue?vue&type=template&id=9404768c&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/EditTaskForm.vue?vue&type=template&id=0104c67e&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/EditTaskForm.vue?vue&type=template&id=0104c67e& ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditTaskForm_vue_vue_type_template_id_0104c67e___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditTaskForm_vue_vue_type_template_id_0104c67e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditTaskForm_vue_vue_type_template_id_0104c67e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./EditTaskForm.vue?vue&type=template&id=0104c67e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/EditTaskForm.vue?vue&type=template&id=0104c67e&");
+
 
 /***/ }),
 
@@ -43753,6 +44025,236 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AlertBox.vue?vue&type=template&id=9404768c&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/AlertBox.vue?vue&type=template&id=9404768c& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "alert-area" }, [
+      _c("div", { staticClass: "card alert-box" }, [
+        _c("div", { staticClass: "card-body" }, [
+          _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
+            _vm._v("Card title")
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "card-text" }, [
+            _vm._v(
+              "Some quick example text to build on the card title and make up the bulk of the card's content."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "a",
+            { staticClass: "card-link text-muted", attrs: { href: "#" } },
+            [_vm._v("Skip")]
+          ),
+          _vm._v(" "),
+          _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
+            _vm._v("Remind me later")
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/EditTaskForm.vue?vue&type=template&id=0104c67e&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/EditTaskForm.vue?vue&type=template&id=0104c67e& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "editTask",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "editTaskLabel",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("form", { on: { submit: _vm.editTask } }, [
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.task.summary,
+                      expression: "task.summary"
+                    }
+                  ],
+                  staticClass: "form-control custom-field",
+                  attrs: {
+                    type: "text",
+                    name: "summary",
+                    id: "summary",
+                    placeholder: "Summary"
+                  },
+                  domProps: { value: _vm.task.summary },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.task, "summary", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.task.description,
+                      expression: "task.description"
+                    }
+                  ],
+                  staticClass: "form-control custom-field",
+                  attrs: {
+                    name: "description",
+                    id: "description",
+                    cols: "30",
+                    rows: "5",
+                    placeholder: "Description"
+                  },
+                  domProps: { value: _vm.task.description },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.task, "description", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.task.due_date,
+                      expression: "task.due_date"
+                    }
+                  ],
+                  staticClass: "form-control custom-field",
+                  attrs: {
+                    type: "datetime-local",
+                    id: "due_date",
+                    name: "due_date",
+                    placeholder: "Due date"
+                  },
+                  domProps: { value: _vm.task.due_date },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.task, "due_date", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(1)
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title", attrs: { id: "editTaskLabel" } }, [
+        _vm._v("Edit Task")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c("div", { staticClass: "col-md-12 text-center" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-dark btn-md", attrs: { type: "submit" } },
+          [_vm._v("Update")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-12 text-center" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-white",
+            attrs: { type: "button", "data-dismiss": "modal" }
+          },
+          [_vm._v("Close")]
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TaskForm.vue?vue&type=template&id=51f73658&":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/TaskForm.vue?vue&type=template&id=51f73658& ***!
@@ -43769,136 +44271,152 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "modal-body" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.summary,
-              expression: "summary"
-            }
-          ],
-          staticClass: "form-control custom-field",
-          attrs: {
-            id: "summary",
-            type: "text",
-            name: "summary",
-            placeholder: "Summary"
-          },
-          domProps: { value: _vm.summary },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.summary = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("small", { staticClass: "text-danger" }, [
-          _vm._v(_vm._s(_vm.summary_err))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.description,
-              expression: "description"
-            }
-          ],
-          staticClass: "form-control custom-field",
-          attrs: {
-            name: "description",
-            id: "description",
-            cols: "30",
-            rows: "5",
-            placeholder: "Description"
-          },
-          domProps: { value: _vm.description },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.description = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("small", { staticClass: "text-danger" }, [
-          _vm._v(_vm._s(_vm.desc_err))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.due_date,
-              expression: "due_date"
-            }
-          ],
-          staticClass: "form-control custom-field",
-          attrs: {
-            id: "due_date",
-            type: "datetime-local",
-            name: "due_date",
-            placeholder: "Due date"
-          },
-          domProps: { value: _vm.due_date },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.due_date = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("small", { staticClass: "text-danger" }, [
-          _vm._v(_vm._s(_vm.ddate_err))
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "newTask",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "newTaskLabel",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("form", { on: { submit: _vm.createTask } }, [
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.task.summary,
+                      expression: "task.summary"
+                    }
+                  ],
+                  staticClass: "form-control custom-field",
+                  attrs: {
+                    type: "text",
+                    name: "summary",
+                    placeholder: "Summary"
+                  },
+                  domProps: { value: _vm.task.summary },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.task, "summary", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.task.description,
+                      expression: "task.description"
+                    }
+                  ],
+                  staticClass: "form-control custom-field",
+                  attrs: {
+                    name: "description",
+                    cols: "30",
+                    rows: "5",
+                    placeholder: "Description"
+                  },
+                  domProps: { value: _vm.task.description },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.task, "description", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.task.due_date,
+                      expression: "task.due_date"
+                    }
+                  ],
+                  staticClass: "form-control custom-field",
+                  attrs: {
+                    type: "datetime-local",
+                    name: "due_date",
+                    placeholder: "Due date"
+                  },
+                  domProps: { value: _vm.task.due_date },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.task, "due_date", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(1)
+          ])
         ])
       ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "modal-footer" }, [
-      _c("div", { staticClass: "col-md-12 text-center" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-dark btn-md", on: { click: _vm.saveTask } },
-          [_vm._v("Save")]
-        )
-      ]),
-      _vm._v(" "),
-      _vm._m(0)
-    ])
-  ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-12 text-center" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-white",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      )
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title", attrs: { id: "newTaskLabel" } }, [
+        _vm._v("New Task")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c("div", { staticClass: "col-md-12 text-center" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-dark btn-md", attrs: { type: "submit" } },
+          [_vm._v("Save")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-12 text-center" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-white",
+            attrs: { type: "button", "data-dismiss": "modal" }
+          },
+          [_vm._v("Close")]
+        )
+      ])
     ])
   }
 ]
@@ -43924,165 +44442,244 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h5", [_vm._v("Incomplete")]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "col-md-12" },
-      _vm._l(_vm.tasks, function(task) {
-        return !task.completed_at
-          ? _c("div", { staticClass: "incomplete mb-4" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.taskId,
-                    expression: "taskId"
-                  }
-                ],
-                staticClass: "form-check-input",
-                attrs: {
-                  name: "status[]",
-                  type: "checkbox",
-                  id: "incomplete-" + task.id
-                },
-                domProps: {
-                  value: task.id,
-                  checked: Array.isArray(_vm.taskId)
-                    ? _vm._i(_vm.taskId, task.id) > -1
-                    : _vm.taskId
-                },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$a = _vm.taskId,
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = task.id,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 && (_vm.taskId = $$a.concat([$$v]))
-                        } else {
-                          $$i > -1 &&
-                            (_vm.taskId = $$a
-                              .slice(0, $$i)
-                              .concat($$a.slice($$i + 1)))
-                        }
-                      } else {
-                        _vm.taskId = $$c
-                      }
-                    },
-                    function($event) {
-                      return _vm.updateActiveStatus(task)
+  return _c(
+    "div",
+    { staticClass: "tasks" },
+    [
+      _c("h5", [_vm._v("Incomplete")]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-md-12" },
+        _vm._l(_vm.tasks, function(task) {
+          return !task.completed_at
+            ? _c("div", { staticClass: "item incomplete mb-4" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: task.completed_at,
+                      expression: "task.completed_at"
                     }
-                  ]
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "label",
-                {
-                  staticClass: "form-check-label",
-                  attrs: { for: "incomplete-" + task.id }
-                },
-                [
-                  _vm._v("\n                " + _vm._s(task.summary) + " "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("small", { staticClass: "text-muted" }, [
-                    _c("i", { staticClass: "fa fa-clock-o" }),
-                    _vm._v(" " + _vm._s(task.due_date))
-                  ])
-                ]
-              )
-            ])
-          : _vm._e()
-      }),
-      0
-    ),
-    _vm._v(" "),
-    _c("h5", [_vm._v("Completed")]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "col-md-12" },
-      _vm._l(_vm.tasks, function(task) {
-        return task.completed_at
-          ? _c("div", { staticClass: "completed" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.taskId,
-                    expression: "taskId"
-                  }
-                ],
-                staticClass: "form-check-input",
-                attrs: {
-                  type: "checkbox",
-                  id: "completed-" + task.id,
-                  checked: ""
-                },
-                domProps: {
-                  value: task.id,
-                  checked: Array.isArray(_vm.taskId)
-                    ? _vm._i(_vm.taskId, task.id) > -1
-                    : _vm.taskId
-                },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$a = _vm.taskId,
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = task.id,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 && (_vm.taskId = $$a.concat([$$v]))
+                  ],
+                  staticClass: "form-check-input",
+                  attrs: {
+                    type: "checkbox",
+                    name: "status[]",
+                    id: "incomplete-" + task.id
+                  },
+                  domProps: {
+                    value: task.id,
+                    checked: Array.isArray(task.completed_at)
+                      ? _vm._i(task.completed_at, task.id) > -1
+                      : task.completed_at
+                  },
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$a = task.completed_at,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = task.id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(task, "completed_at", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                task,
+                                "completed_at",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
                         } else {
-                          $$i > -1 &&
-                            (_vm.taskId = $$a
-                              .slice(0, $$i)
-                              .concat($$a.slice($$i + 1)))
+                          _vm.$set(task, "completed_at", $$c)
                         }
-                      } else {
-                        _vm.taskId = $$c
+                      },
+                      function($event) {
+                        return _vm.updateTaskStatus(task)
                       }
-                    },
-                    function($event) {
-                      return _vm.updateActiveStatus(task)
-                    }
+                    ]
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  {
+                    staticClass: "form-check-label",
+                    attrs: { for: "incomplete-" + task.id }
+                  },
+                  [
+                    _vm._v("\n                " + _vm._s(task.summary) + " "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("small", { staticClass: "text-muted" }, [
+                      _c("i", { staticClass: "fa fa-clock-o" }),
+                      _vm._v(" " + _vm._s(task.due_date_human))
+                    ])
                   ]
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "label",
-                {
-                  staticClass: "form-check-label text-muted",
-                  attrs: { for: "completed-" + task.id }
-                },
-                [
-                  _vm._v("\n                " + _vm._s(task.summary) + " "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("small", [
-                    _c("i", { staticClass: "fa fa-clock-o" }),
-                    _vm._v(" " + _vm._s(task.due_date))
-                  ])
-                ]
-              )
-            ])
-          : _vm._e()
-      }),
-      0
-    )
-  ])
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "text-info",
+                    attrs: {
+                      href: "javascript:void()",
+                      "data-toggle": "modal",
+                      "data-target": "#editTask"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.editTask(task)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-pencil-square-o" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "text-danger",
+                    attrs: { href: "javascript:void()" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteTask(task)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-times-circle-o" })]
+                )
+              ])
+            : _vm._e()
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("h5", [_vm._v("Completed")]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-md-12" },
+        _vm._l(_vm.tasks, function(task) {
+          return task.completed_at
+            ? _c("div", { staticClass: "item completed" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: task.completed_at,
+                      expression: "task.completed_at"
+                    }
+                  ],
+                  staticClass: "form-check-input",
+                  attrs: {
+                    type: "checkbox",
+                    name: "status[]",
+                    id: "completed-" + task.id
+                  },
+                  domProps: {
+                    value: task.id,
+                    checked: Array.isArray(task.completed_at)
+                      ? _vm._i(task.completed_at, task.id) > -1
+                      : task.completed_at
+                  },
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$a = task.completed_at,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = task.id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(task, "completed_at", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                task,
+                                "completed_at",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(task, "completed_at", $$c)
+                        }
+                      },
+                      function($event) {
+                        return _vm.updateTaskStatus(task)
+                      }
+                    ]
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  {
+                    staticClass: "form-check-label text-muted",
+                    attrs: { for: "completed-" + task.id }
+                  },
+                  [
+                    _vm._v("\n                " + _vm._s(task.summary) + " "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("small", [
+                      _c("i", { staticClass: "fa fa-clock-o" }),
+                      _vm._v(" " + _vm._s(task.due_date_human))
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "text-info",
+                    attrs: {
+                      href: "javascript:void()",
+                      "data-toggle": "modal",
+                      "data-target": "#editTask"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.editTask(task)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-pencil-square-o" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "text-danger",
+                    attrs: { href: "javascript:void()" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteTask(task)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-times-circle-o" })]
+                )
+              ])
+            : _vm._e()
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("task-form", { on: { "task:created": _vm.taskCreated } }),
+      _vm._v(" "),
+      _c("task-edit-form", { on: { "task:edited": _vm.editTask } })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

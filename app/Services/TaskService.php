@@ -14,7 +14,12 @@ class TaskService
 {
     public function getTaskByUserId(int $userId)
     {
-        return Task::where('user_id', $userId)->get();
+        return Task::where('user_id', $userId)->orderBy('updated_at', 'DESC')->get();
+    }
+
+    public function getTaskByTaskId(int $taskId)
+    {
+        return Task::where('id', $taskId)->first();
     }
 
     public function storeTask($request): Task
@@ -29,15 +34,19 @@ class TaskService
         return $task;
     }
 
-    public function updateTask(Task $task): Task
+    public function updateTask(Task $task, $request): Task
     {
         $task = $task->where('id', $task->id)->first();
 
-        if (!$task->status) {
+        if ($task->completed_at === null) {
             $task->completed_at = Carbon::now();
         } else {
             $task->completed_at = null;
         }
+
+        $task->summary = $request->summary;
+        $task->description = $request->description;
+        $task->due_date = $request->due_date;
 
         $task->save();
 

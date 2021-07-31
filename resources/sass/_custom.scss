@@ -1,0 +1,22 @@
+
+.custom-field {
+    border: 0!important;
+    outline: 0;
+    background: transparent;
+    border-bottom: 0.5px solid rgba(189, 189, 189, 0.8)!important;
+}
+
+.alert-area {
+    position: absolute;
+    width: 18rem;
+    top: 20px;
+    right: 20px;
+    max-height: calc(100vh - 50px);
+    min-height: calc(100vh - 50px);
+    overflow-y: auto;
+    .alert-box {
+        box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+}

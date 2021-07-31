@@ -1,25 +1,25 @@
 <template>
-    <div class="modal fade" id="newTask" tabindex="-1" role="dialog" aria-labelledby="newTaskLabel" aria-hidden="true">
+    <div class="modal fade" id="editTask" tabindex="-1" role="dialog" aria-labelledby="editTaskLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newTaskLabel">New Task</h5>
+                    <h5 class="modal-title" id="editTaskLabel">Edit Task</h5>
                 </div>
-                <form v-on:submit="createTask">
+                <form v-on:submit="editTask">
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="text" class="form-control custom-field" name="summary" placeholder="Summary" v-model="task.summary">
+                            <input type="text" name="summary" id="summary" class="form-control custom-field" placeholder="Summary" v-model="task.summary">
                         </div>
                         <div class="form-group">
-                            <textarea name="description" class="form-control custom-field" cols="30" rows="5" placeholder="Description" v-model="task.description"></textarea>
+                            <textarea name="description" id="description" class="form-control custom-field" cols="30" rows="5" placeholder="Description" v-model="task.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <input type="datetime-local" class="form-control custom-field" name="due_date" placeholder="Due date" v-model="task.due_date">
+                            <input type="datetime-local" id="due_date" name="due_date" class="form-control custom-field" placeholder="Due date" v-model="task.due_date">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="col-md-12 text-center">
-                            <button type="submit" class="btn btn-dark btn-md">Save</button>
+                            <button type="submit" class="btn btn-dark btn-md">Update</button>
                         </div>
                         <div class="col-md-12 text-center">
                             <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
@@ -36,23 +36,24 @@
         data() {
             return {
                task: {
+                    id: '',
                     summary: '',
                     description: '',
-                    due_date: '',
+                    due_date: ''
                }
             }
         },
         methods: {
-            createTask(e) {
+            editTask(e) {
                 e.preventDefault()
-                axios.post('/tasks', this.task).then(response => {
-                    this.$emit('task:created', response.data)
+                axios.put(`/tasks`, this.task).then(response => {
+                    this.$emit('task:edited', response.data)
 
                     this.task.summary = ''
                     this.task.description = ''
                     this.task.due_date = ''
 
-                    $('#newTask').modal('toggle')
+                    $('#editTask').modal('toggle')
                 })
                 .catch(function (error) {
                     // let $err = error.response.data.errors
