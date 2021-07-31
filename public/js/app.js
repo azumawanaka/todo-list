@@ -1873,7 +1873,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['user'],
+  props: [],
   data: function data() {
     return {
       summary_err: '',
@@ -1900,7 +1900,6 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.summary && this.description && this.due_date) {
         this.$emit('taskadded', {
-          user: this.user,
           summary: this.summary,
           description: this.description,
           due_date: this.due_date
@@ -1953,16 +1952,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['tasks'],
   data: function data() {
     return {
+      tasks: [],
       taskId: []
     };
   },
+  created: function created() {
+    this.taskLists();
+  },
   methods: {
-    updateActiveStatus: function updateActiveStatus() {
-      var res = axios.put("/tasks/".concat(this.taskId));
-      console.log(res.data);
+    taskLists: function taskLists() {
+      var _this = this;
+
+      axios.get('/tasks').then(function (response) {
+        _this.tasks = response.data;
+      });
+    },
+    updateActiveStatus: function updateActiveStatus(task) {
+      axios.put("/tasks/".concat(this.taskId), task);
     }
   }
 });
@@ -1986,24 +1994,22 @@ var app = new Vue({
     tasks: []
   },
   created: function created() {
-    var _this = this;
-
-    this.taskLists();
-    Echo["private"]('todo-list').listen('TaskAdded', function (e) {
-      _this.tasks.push({
-        user: e.user,
-        summary: e.tasks.summary,
-        description: e.tasks.description,
-        due_date: e.tasks.due_date
-      });
-    });
+    this.taskLists(); // Echo.private('todo')
+    // .listen('taskadded', (e) => {
+    //     this.tasks.push({
+    //         user: e.user,
+    //         summary: e.tasks.summary,
+    //         description: e.tasks.description,
+    //         due_date: e.tasks.due_date,
+    //     });
+    // });
   },
   methods: {
     taskLists: function taskLists() {
-      var _this2 = this;
+      var _this = this;
 
-      axios.get('/tasks/lists').then(function (response) {
-        _this2.tasks = response.data;
+      axios.get('/tasks').then(function (response) {
+        _this.tasks = response.data;
       });
     },
     saveTask: function saveTask(tasks) {
@@ -43924,9 +43930,9 @@ var render = function() {
     _c(
       "div",
       { staticClass: "col-md-12" },
-      _vm._l(_vm.tasks, function(task, tId) {
-        return task.status === 0
-          ? _c("div", { key: tId, staticClass: "incomplete mb-4" }, [
+      _vm._l(_vm.tasks, function(task) {
+        return !task.completed_at
+          ? _c("div", { staticClass: "incomplete mb-4" }, [
               _c("input", {
                 directives: [
                   {
@@ -43937,7 +43943,11 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-check-input",
-                attrs: { name: "status[]", type: "checkbox", id: task.id },
+                attrs: {
+                  name: "status[]",
+                  type: "checkbox",
+                  id: "incomplete-" + task.id
+                },
                 domProps: {
                   value: task.id,
                   checked: Array.isArray(_vm.taskId)
@@ -43966,7 +43976,7 @@ var render = function() {
                       }
                     },
                     function($event) {
-                      return _vm.updateActiveStatus()
+                      return _vm.updateActiveStatus(task)
                     }
                   ]
                 }
@@ -43974,7 +43984,10 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "label",
-                { staticClass: "form-check-label", attrs: { for: task.id } },
+                {
+                  staticClass: "form-check-label",
+                  attrs: { for: "incomplete-" + task.id }
+                },
                 [
                   _vm._v("\n                " + _vm._s(task.summary) + " "),
                   _c("br"),
@@ -43996,20 +44009,63 @@ var render = function() {
     _c(
       "div",
       { staticClass: "col-md-12" },
-      _vm._l(_vm.tasks, function(task, tId) {
-        return task.status === 1
-          ? _c("div", { key: tId, staticClass: "completed" }, [
+      _vm._l(_vm.tasks, function(task) {
+        return task.completed_at
+          ? _c("div", { staticClass: "completed" }, [
               _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.taskId,
+                    expression: "taskId"
+                  }
+                ],
                 staticClass: "form-check-input",
-                attrs: { type: "checkbox", id: task.id, checked: "" },
-                domProps: { value: task.id }
+                attrs: {
+                  type: "checkbox",
+                  id: "completed-" + task.id,
+                  checked: ""
+                },
+                domProps: {
+                  value: task.id,
+                  checked: Array.isArray(_vm.taskId)
+                    ? _vm._i(_vm.taskId, task.id) > -1
+                    : _vm.taskId
+                },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$a = _vm.taskId,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = task.id,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.taskId = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.taskId = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.taskId = $$c
+                      }
+                    },
+                    function($event) {
+                      return _vm.updateActiveStatus(task)
+                    }
+                  ]
+                }
               }),
               _vm._v(" "),
               _c(
                 "label",
                 {
                   staticClass: "form-check-label text-muted",
-                  attrs: { for: task.id }
+                  attrs: { for: "completed-" + task.id }
                 },
                 [
                   _vm._v("\n                " + _vm._s(task.summary) + " "),

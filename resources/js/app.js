@@ -12,19 +12,19 @@ const app = new Vue({
     },
     created() {
         this.taskLists();
-        Echo.private('todo-list')
-        .listen('TaskAdded', (e) => {
-            this.tasks.push({
-                user: e.user,
-                summary: e.tasks.summary,
-                description: e.tasks.description,
-                due_date: e.tasks.due_date,
-            });
-        });
+        // Echo.private('todo')
+        // .listen('taskadded', (e) => {
+        //     this.tasks.push({
+        //         user: e.user,
+        //         summary: e.tasks.summary,
+        //         description: e.tasks.description,
+        //         due_date: e.tasks.due_date,
+        //     });
+        // });
     },
     methods: {
         taskLists() {
-            axios.get('/tasks/lists').then(response => {
+            axios.get('/tasks').then(response => {
                 this.tasks = response.data;
             });
         },

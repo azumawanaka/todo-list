@@ -5,22 +5,22 @@ namespace App\Services;
 use App\Http\Requests\TaskFormRequest;
 use App\Models\User;
 use App\Models\Task;
+use Carbon\Carbon;
 
 /**
  * Class TaskService.
  */
 class TaskService
 {
-    // private $agencyRepository;
-
-    public function __construct() {
-        // $this->agencyRepository = $agencyRepository;
+    public function getTaskByUserId(int $userId)
+    {
+        return Task::where('user_id', $userId)->get();
     }
 
-    public function storeTask(User $user, TaskFormRequest $request): Task
+    public function storeTask($request): Task
     {
         $task = new Task();
-        $task->user_id = $user->id;
+        $task->user_id = $request->user()->id;
         $task->summary = $request->summary;
         $task->description = $request->description;
         $task->due_date = $request->due_date;
@@ -29,15 +29,14 @@ class TaskService
         return $task;
     }
 
-    public function updateTask(int $taskId): Task
+    public function updateTask(Task $task): Task
     {
-        $task = new Task();
-        $task = $task->where('id', $taskId)->first();
+        $task = $task->where('id', $task->id)->first();
 
-        if ($task->status === 0) {
-            $task->status = 1;
+        if (!$task->status) {
+            $task->completed_at = Carbon::now();
         } else {
-            $task->status = 0;
+            $task->completed_at = null;
         }
 
         $task->save();

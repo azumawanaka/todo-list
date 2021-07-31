@@ -27,7 +27,7 @@
 
 <script>
     export default {
-        props: ['user'],
+        props: [],
         data() {
             return {
                 summary_err: '',
@@ -52,7 +52,6 @@
 
                 if (this.summary && this.description && this.due_date) {
                     this.$emit('taskadded', {
-                        user: this.user,
                         summary: this.summary,
                         description: this.description,
                         due_date: this.due_date,

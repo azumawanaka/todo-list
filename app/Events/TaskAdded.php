@@ -16,13 +16,6 @@ class TaskAdded implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * User that sent the message
-     *
-     * @var User
-     */
-    public $user;
-
-    /**
      * Message details
      *
      * @var Task $tasks
@@ -34,9 +27,8 @@ class TaskAdded implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(User $user, Task $tasks)
+    public function __construct(Task $tasks)
     {
-        $this->user = $user;
         $this->tasks = $tasks;
     }
 
@@ -47,6 +39,6 @@ class TaskAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('todo-list');
+        return new PrivateChannel('todo');
     }
 }

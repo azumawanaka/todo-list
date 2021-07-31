@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use App\Events\TaskAdded;
-use Illuminate\Http\Response;
 use App\Http\Requests\TaskFormRequest;
 use App\Services\TaskService;
 use App\Models\Task;
 
 class TasksController extends Controller
 {
-
     /**
      * @var TaskService $taskService
      */
@@ -23,36 +19,57 @@ class TasksController extends Controller
     {
         $this->middleware('auth');
         $this->taskService = $taskService;
-
     }
 
-    public function index(): View
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
-        return view('tasks.index');
+        $tasks = $this->taskService->getTaskByUserId($request->user()->id);
+        return response($tasks);
     }
 
+    /**
+     * @return \Illuminate\Http\Response
+     */
     public function store(TaskFormRequest $request)
     {
-        $user = Auth::user();
-        $task = $this->taskService->storeTask($user, $request);
+        $task = $this->taskService->storeTask($request);
 
-        broadcast(new TaskAdded($user, $task))->toOthers();
+        broadcast(new TaskAdded($task))->toOthers();
 
-        return ['status' => 'New task added!'];
+        return response($task);
     }
 
-    public function fetchTasks()
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
-        return Task::with('user')->get();
+        //
     }
 
-    public function update(int $taskId)
+    public function update(Task $task)
     {
-        $user = Auth::user();
-        $task = $this->taskService->updateTask($taskId);
+        $task = $this->taskService->updateTask($task);
 
-        broadcast(new TaskAdded($user, $task))->toOthers();
+        broadcast(new TaskAdded($task))->toOthers();
 
-        return ['status' => 'Task updated!'];
+        return response($task);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }
