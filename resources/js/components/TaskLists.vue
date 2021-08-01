@@ -1,46 +1,55 @@
 <template>
     <div class="tasks">
         <h5>Incomplete</h5>
-        <div class="col-md-12">
-            <div class="item incomplete mb-4" v-for="task in tasks"  v-if="!task.completed_at">
-                <input
-                    type="checkbox"
-                    class="form-check-input"
-                    name="status[]"
-                    :value="task.id"
-                    :id="'incomplete-' + task.id"
-                    @change='updateTaskStatus(task)'
-                    v-model="task.completed_at">
-                <label class="form-check-label" :for="'incomplete-' + task.id">
-                    {{ task.summary }} <br/>
-                    <small class="text-muted"><i class="fa fa-clock-o"></i> {{ task.due_date_human }}</small>
-                </label>
-                <a href="javascript:void()" class="text-info" @click='editTask(task)' data-toggle="modal" data-target="#editTask"><i class="fa fa-pencil-square-o"></i></a>
-                <a href="javascript:void()" class="text-danger" @click='deleteTask(task)'><i class="fa fa-times-circle-o"></i></a>
-            </div>
-        </div>
+        <ul class="list-group mb-4">
+            <li class="list-group-item border-0 bg-transparent d-flex" v-for="task in tasks"  v-if="!task.completed_at">
+                <div class="item incomplete">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        name="status[]"
+                        :value="task.id"
+                        :id="'incomplete-' + task.id"
+                        @change='updateTaskStatus(task)'
+                        v-model="task.completed_at">
+                    <label class="form-check-label" :for="'incomplete-' + task.id">
+                        {{ task.summary }} <br/>
+                        <small class="text-muted"><i class="fa fa-clock-o"></i> {{ task.due_date_human }}</small>
+                    </label>
+                </div>
+                <div class="opt">
+                    <a href="javascript:void()" class="text-info" @click='editTask(task)' data-toggle="modal" data-target="#editTask"><i class="fa fa-pencil-square-o"></i></a>
+                    <a href="javascript:void()" class="text-danger" @click='deleteTask(task)'><i class="fa fa-times-circle-o"></i></a>
+                </div>
+            </li>
+        </ul>
+
         <h5>Completed</h5>
-        <div class="col-md-12">
-            <div class="item completed" v-for="task in tasks" v-if="task.completed_at">
-                <input
-                    type="checkbox"
-                    class="form-check-input"
-                    name="status[]"
-                    :value="task.id"
-                    :id="'completed-' + task.id"
-                    @change='updateTaskStatus(task)'
-                    v-model="task.completed_at">
-                <label class="form-check-label text-muted" :for="'completed-' + task.id">
-                    {{ task.summary }} <br/>
-                    <small><i class="fa fa-clock-o"></i> {{ task.due_date_human }}</small>
-                </label>
-                <a href="javascript:void()" class="text-info" @click='editTask(task)' data-toggle="modal" data-target="#editTask"><i class="fa fa-pencil-square-o"></i></a>
-                <a href="javascript:void()" class="text-danger" @click='deleteTask(task)'><i class="fa fa-times-circle-o"></i></a>
-            </div>
-        </div>
+        <ul class="list-group">
+            <li class="list-group-item border-0 bg-transparent d-flex" v-for="task in tasks" v-if="task.completed_at">
+                <div class="item completed">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        name="status[]"
+                        :value="task.id"
+                        :id="'completed-' + task.id"
+                        @change='updateTaskStatus(task)'
+                        v-model="task.completed_at">
+                    <label class="form-check-label text-muted" :for="'completed-' + task.id">
+                        {{ task.summary }} <br/>
+                        <small><i class="fa fa-clock-o"></i> {{ task.due_date_human }}</small>
+                    </label>
+                </div>
+                <div class="opt">
+                    <a href="javascript:void()" class="text-info" @click='editTask(task)' data-toggle="modal" data-target="#editTask"><i class="fa fa-pencil-square-o"></i></a>
+                    <a href="javascript:void()" class="text-danger" @click='deleteTask(task)'><i class="fa fa-times-circle-o"></i></a>
+                </div>
+            </li>
+        </ul>
 
         <task-form v-on:task:created="taskCreated"></task-form>
-        <task-edit-form v-on:task:edited="editTask"></task-edit-form>
+        <edit-form v-on:task:edited="taskEdited" :currentTask="currentTask"></edit-form>
     </div>
 </template>
 
@@ -49,9 +58,10 @@
         data() {
             return {
                 tasks: [],
+                currentTask: [],
                 summary: '',
                 description: '',
-                due_date: '',
+                due_date: ''
             }
         },
         created() {
@@ -61,14 +71,9 @@
                 this.tasks.push({
                     summary: e.task.summary,
                     description: e.task.description,
-                    due_date_human: e.task.due_date_human,
+                    due_date: e.task.due_date_human
                 });
             });
-        },
-        updated() {
-            this.taskLists();
-            Echo.private('todo')
-            .listen('TaskAdded');
         },
         methods: {
             taskLists() {
@@ -77,25 +82,26 @@
                 });
             },
             updateTaskStatus(task) {
-                axios.put(`/tasks/${task.id}`, task).then(response => {
-                    this.tasks = response.data;
-                });
+                axios.put(`/tasks/${task.id}`, task)
+            },
+            deleteTask(task) {
+                if (confirm("Are you sure you want to delete this task?")) {
+                    axios.delete(`/tasks/${task.id}`, task);
+                }
+            },
+            editTask(task) {
+                this.currentTask = {
+                    taskId: task.id,
+                    summary: task.summary,
+                    description: task.description,
+                    due_date: task.due_date
+                }
             },
             taskCreated(task) {
                 this.tasks.push(task)
             },
-            editTask(task) {
+            taskEdited(task) {
                 this.tasks.push(task)
-            },
-            // taskEdited(task) {
-            //     this.tasks.push(task)
-            // },
-            deleteTask(task) {
-                if (confirm("Are you sure you want to delete this task?")) {
-                    axios.delete(`/tasks/${task.id}`, task).then(response => {
-                        this.tasks = response.data;
-                    });
-                }
             }
         }
     };

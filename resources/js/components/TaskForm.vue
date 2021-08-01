@@ -47,12 +47,11 @@
                 e.preventDefault()
                 axios.post('/tasks', this.task).then(response => {
                     this.$emit('task:created', response.data)
+                    $('#newTask').modal('toggle')
 
                     this.task.summary = ''
                     this.task.description = ''
                     this.task.due_date = ''
-
-                    $('#newTask').modal('toggle')
                 })
                 .catch(function (error) {
                     // let $err = error.response.data.errors

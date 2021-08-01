@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-class TaskDeleted extends TaskCreated
+class TaskDeleted extends TaskAdded
 {
 
 }

@@ -2,39 +2,45 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Requests\LoginFormRequest;
+use App\Services\LoginService;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
+     * @var LoginService $loginService
      */
-    protected $redirectTo = '/';
+    private $loginService;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function __construct(LoginService $loginService)
     {
+        $this->loginService = $loginService;
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(LoginFormRequest $form): RedirectResponse
+    {
+        $loginUser = $this->loginService->login($form);
+        if($loginUser) {
+            Auth::loginUsingId($loginUser->id);
+            return $this->loginService->redirectRouteByUser($loginUser);
+        } else {
+            return redirect()->back()->withErrors(['auth' => trans('auth.failed')])->withInput();
+        }
+    }
+
+    public function logout(): RedirectResponse
+    {
+        Auth::logout();
+        return redirect('/login');
+    }
+
+    public function showLoginForm(): View
+    {
+        return view('auth.login');
     }
 }

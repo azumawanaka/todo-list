@@ -5,16 +5,16 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="editTaskLabel">Edit Task</h5>
                 </div>
-                <form v-on:submit="editTask">
+                <form v-on:submit="updateTask">
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="text" name="summary" id="summary" class="form-control custom-field" placeholder="Summary" v-model="task.summary">
+                            <input type="text" name="summary" class="form-control custom-field" placeholder="Summary" v-model="currentTask.summary">
                         </div>
                         <div class="form-group">
-                            <textarea name="description" id="description" class="form-control custom-field" cols="30" rows="5" placeholder="Description" v-model="task.description"></textarea>
+                            <textarea name="description" class="form-control custom-field" cols="30" rows="5" placeholder="Description" v-model="currentTask.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <input type="datetime-local" id="due_date" name="due_date" class="form-control custom-field" placeholder="Due date" v-model="task.due_date">
+                            <input type="datetime-local" name="due_date" class="form-control custom-field" placeholder="Due date" :value="toDate(currentTask.due_date)">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -32,11 +32,13 @@
 </template>
 
 <script>
+    import moment from 'moment';
+
     export default {
+        props: ['currentTask'],
         data() {
             return {
                task: {
-                    id: '',
                     summary: '',
                     description: '',
                     due_date: ''
@@ -44,20 +46,23 @@
             }
         },
         methods: {
-            editTask(e) {
+            updateTask(e) {
                 e.preventDefault()
-                axios.put(`/tasks`, this.task).then(response => {
+                axios.put(`/tasks/${this.currentTask.taskId}`, this.currentTask).then(response => {
                     this.$emit('task:edited', response.data)
 
-                    this.task.summary = ''
-                    this.task.description = ''
-                    this.task.due_date = ''
-
                     $('#editTask').modal('toggle')
+
+                    this.currentTask.summary = ''
+                    this.currentTask.description = ''
+                    this.currentTask.due_date = ''
                 })
                 .catch(function (error) {
                     // let $err = error.response.data.errors
                 })
+            },
+            toDate(date) {
+                return moment(date).format("YYYY-MM-DDTHH:mm")
             }
         }
     }

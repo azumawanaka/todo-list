@@ -7,7 +7,7 @@
 
             <task-lists></task-lists>
 
-            <alert-box></alert-box>
+            {{-- <alert-box></alert-box> --}}
         </div>
     </div>
 @endsection

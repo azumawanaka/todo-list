@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -46,5 +47,17 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function isAdminUser()
+    {
+        $role = $this->where('role', 1)->first();
+        return $role->role != 0;
+    }
+
+    public function isRegularUser()
+    {
+        $role = $this->where('role', 0)->first();
+        return $role->role != 1;
     }
 }
