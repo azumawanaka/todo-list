@@ -7,7 +7,9 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/admin/login', function() {
-    return view('/auth/admin/login');
+    return view('/auth/login', [
+        'title' => 'Admin Log In',
+    ]);
 });
 
 Auth::routes();
