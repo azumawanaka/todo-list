@@ -2,8 +2,6 @@
 
 @section('content')
     <div class="container">
-        <div class="users">
-
-        </div>
+        <user-lists></user-lists>
     </div>
 @endsection

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\TasksController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Api\UsersController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/admin/login', function() {
@@ -20,5 +21,6 @@ Route::group(['middleware' => ['auth', 'can:user']], function () {
 });
 
 Route::group(['middleware' => ['auth', 'can:admin']], function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.home');
+    Route::get('/user_lists', [AdminController::class, 'index'])->name('users.lists');
+    Route::resource('/users', UsersController::class);
 });

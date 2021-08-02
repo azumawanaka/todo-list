@@ -41,7 +41,6 @@ class LoginService
             if ($loginUser->isRegularUser()) {
                 return $this->routeToUserPage($user);
             }
-
         } catch (\Exception $er) {
             \Log::error($er->getMessage());
             throw $er;
@@ -50,7 +49,7 @@ class LoginService
 
     public function routeToAdminPage(User $user): RedirectResponse
     {
-        return redirect()->intended(route('admin.home'));
+        return redirect()->intended(route('users.lists'));
     }
 
     public function routeToUserPage(User $user): RedirectResponse

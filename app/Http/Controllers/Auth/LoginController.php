@@ -27,6 +27,10 @@ class LoginController extends Controller
         $loginUser = $this->loginService->login($form);
         if($loginUser) {
             Auth::loginUsingId($loginUser->id);
+
+            $loginUser->last_active = \Carbon\Carbon::now();
+            $loginUser->save();
+
             return $this->loginService->redirectRouteByUser($loginUser);
         } else {
             return redirect()->back()->withErrors(['auth' => trans('auth.failed')])->withInput();
@@ -35,7 +39,13 @@ class LoginController extends Controller
 
     public function logout(): RedirectResponse
     {
+        $loginUser = Auth::user();
+
         Auth::logout();
+
+        $loginUser->last_active = \Carbon\Carbon::now();
+        $loginUser->save();
+
         return redirect('/login');
     }
 

@@ -44,6 +44,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $dates = [
+        'last_login',
+        'last_update',
+        'last_update_time',
+    ];
+
+    protected $appends = [
+        'last_login_human',
+        'last_update_human',
+        'last_update_time_human',
+    ];
+
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
@@ -59,5 +71,20 @@ class User extends Authenticatable
     {
         $role = $this->where('role', 0)->first();
         return $role->role != 1;
+    }
+
+    public function getLastLoginHumanAttribute(): string
+    {
+        return $this->last_login->diffForHumans();
+    }
+
+    public function getLastUpdateHumanAttribute(): string
+    {
+        return \Carbon\Carbon::parse($this->last_update)->format('M d, Y');
+    }
+
+    public function getLastUpdateTimeHumanAttribute(): string
+    {
+        return \Carbon\Carbon::parse($this->last_update)->format('g:i A');
     }
 }

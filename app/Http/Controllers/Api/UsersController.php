@@ -1,11 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\UserService;
 
-class AdminController extends Controller
+class UsersController extends Controller
 {
+    /**
+     * @var UserService $userService
+     */
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * @return \Illuminate\Http\Response
      */

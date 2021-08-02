@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Requests\TaskFormRequest;
-use App\Models\User;
 use App\Models\Task;
 use Carbon\Carbon;
 
