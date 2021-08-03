@@ -34,15 +34,18 @@ class TaskService
 
     public function updateTask(Task $task, $request): Task
     {
-        if ($task->completed_at === null) {
-            $task->completed_at = Carbon::now();
+        if ($request->completed_at === null) {
+            $task->summary = $request->summary;
+            $task->description = $request->description;
+            $task->due_date = $request->due_date;
         } else {
-            $task->completed_at = null;
+            if ($task->completed_at === null) {
+                $task->completed_at = Carbon::now();
+            } else {
+                $task->completed_at = null;
+            }
         }
 
-        $task->summary = $request->summary;
-        $task->description = $request->description;
-        $task->due_date = $request->due_date;
         $task->save();
 
         return $task;

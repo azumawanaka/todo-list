@@ -5,17 +5,21 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\TaskService;
 
 class UsersController extends Controller
 {
     /**
      * @var UserService $userService
+     * @var TaskService $taskService
      */
     protected $userService;
+    protected $taskService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, TaskService $taskService)
     {
         $this->userService = $userService;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -39,14 +43,12 @@ class UsersController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $userId)
     {
-        //
+        $tasks = $this->taskService->getTaskByUserId($userId);
+        return response($tasks);
     }
 
     /**

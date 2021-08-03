@@ -22,5 +22,7 @@ Route::group(['middleware' => ['auth', 'can:user']], function () {
 
 Route::group(['middleware' => ['auth', 'can:admin']], function () {
     Route::get('/user_lists', [AdminController::class, 'index'])->name('users.lists');
-    Route::resource('/users', UsersController::class);
+    Route::resource('/users', UsersController::class, [
+        'only' => ['index', 'store', 'show', 'update', 'destroy'],
+    ]);
 });

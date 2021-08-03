@@ -45,12 +45,19 @@
                }
             }
         },
+        created() {
+            Echo.private('todo')
+            .listen('TaskAdded', (e) => {
+                this.taskLists();
+            });
+        },
         methods: {
+            taskLists() {
+                axios.get('/tasks');
+            },
             updateTask(e) {
                 e.preventDefault()
                 axios.put(`/tasks/${this.currentTask.taskId}`, this.currentTask).then(response => {
-                    this.$emit('task:edited', response.data)
-
                     $('#editTask').modal('toggle')
 
                     this.currentTask.summary = ''

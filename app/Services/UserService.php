@@ -11,17 +11,16 @@ use App\Models\User;
  */
 class UserService
 {
-    public function getUsers(int $limit = 10)
+    public function getUsers()
     {
-        return User::leftJoin('tasks', 'tasks.user_id', 'users.id')
-        ->select([
-            DB::raw("count(tasks.user_id) as total_tasks"),
-            'users.name as uname',
-            'users.updated_at as last_login',
-            'tasks.updated_at as last_update'
-        ])
-        ->where('users.role', 0)
-        ->groupBy('users.id')
-        ->get();
+        return User::select([
+                'users.id as uId',
+                'users.name',
+                'users.updated_at as last_login',
+                'users.updated_at as last_update',
+            ])
+            ->withCount('tasks')
+            ->where('users.role', 0)
+            ->get();
     }
 }
