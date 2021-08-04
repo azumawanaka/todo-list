@@ -10,6 +10,7 @@ Vue.component('edit-form', require('./components/EditForm.vue').default);
 // Vue.component('alert-box', require('./components/AlertBox.vue').default);
 Vue.component('user-lists', require('./components/UserLists.vue').default);
 Vue.component('user-tasks', require('./components/UsersTaskLists.vue').default);
+Vue.component('user-task-form', require('./components/UserTaskForm.vue').default);
 
 const app = new Vue({
     el: '#app'

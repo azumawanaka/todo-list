@@ -50,4 +50,16 @@ class TaskService
 
         return $task;
     }
+
+    public function storeTaskByUser($request): Task
+    {
+        $task = new Task();
+        $task->user_id = $request->id;
+        $task->summary = $request->summary;
+        $task->description = $request->description;
+        $task->due_date = $request->due_date;
+        $task->save();
+
+        return $task;
+    }
 }

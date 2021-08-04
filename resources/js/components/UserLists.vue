@@ -26,7 +26,7 @@
                                     <i class="fa fa-ellipsis-v"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary">
-                                    <a class="dropdown-item" @click='checkTasks(user)'><i class="fa fa-tasks"></i> View all tasks</a>
+                                    <a class="dropdown-item btn btn-default" @click='checkTasks(user)'><i class="fa fa-tasks"></i> View all tasks</a>
                                 </div>
                             </td>
                         </tr>
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <user-tasks :userTasks="userTasks" :user="user" v-bind:visible="taskVisibility"></user-tasks>
+        <user-tasks v-on:userTasks:back="backToList" :userTasks="userTasks" :user="user" v-bind:visible="taskVisibility"></user-tasks>
     </div>
 
 </template>
@@ -66,8 +66,6 @@
             },
             checkTasks(user) {
                 this.taskVisibility = true;
-
-                console.log(user.name);
                 this.user = user;
                 axios.get(`/users/${user.uId}`).then(response => {
                     this.userTasks = response.data;
@@ -75,6 +73,9 @@
                 .catch(function (error) {
                     // let $err = error.response.data.errors
                 });
+            },
+            backToList() {
+                this.taskVisibility = false;
             }
         }
     };

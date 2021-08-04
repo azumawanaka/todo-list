@@ -1,6 +1,9 @@
 <template>
     <div v-if="visible">
-        <h2 class="mb-4"><a href="#" class="text-dark"><i class="fa fa-arrow-left"></i> {{ user.name }}</a></h2>
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <a href="javascript:void()" @click="goBack()" class="btn btn-default h2 text-dark"><i class="fa fa-arrow-left"></i> {{ user.name }}</a>
+            <a href="#" class="btn btn-default text-dark" @click="newTask(user)" data-toggle="modal" data-target="#userTask"><i class="fa fa-plus-square"></i> Add Task</a>
+        </div>
         <h5>All Tasks</h5>
         <div class="table-responsive">
             <table class="table table-hover">
@@ -24,11 +27,29 @@
                 </tbody>
             </table>
         </div>
+
+        <user-task-form v-on:task:created="taskCreated" :user="user"></user-task-form>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['userTasks', 'user', 'visible']
+        props: ['userTasks', 'user', 'visible'],
+        data() {
+            return {
+                task: []
+            }
+        },
+        methods: {
+            goBack() {
+                this.$emit('userTasks:back');
+            },
+            newTask(user) {
+                this.user = user;
+            },
+            taskCreated(task) {
+                this.task.push(task);
+            }
+        }
     };
 </script>

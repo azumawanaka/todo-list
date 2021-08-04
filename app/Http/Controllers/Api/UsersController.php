@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\TaskFormRequest;
+use App\Events\TaskAdded;
 use App\Services\UserService;
 use App\Services\TaskService;
 
@@ -32,14 +34,15 @@ class UsersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskFormRequest $request)
     {
-        //
+        $task = $this->taskService->storeTaskByUser($request);
+
+        broadcast(new TaskAdded($task))->toOthers();
+
+        return response($task);
     }
 
     /**
