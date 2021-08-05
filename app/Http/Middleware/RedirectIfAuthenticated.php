@@ -21,14 +21,7 @@ class RedirectIfAuthenticated
 
         if (Auth::guard($guard)->check()) {
             $loginUser = Auth::user();
-
-            if($loginUser->isAdminUser()) {
-                return $loginService->routeToAdminPage($loginUser);
-            }
-
-            if ($loginUser->isRegularUser()) {
-                return $loginService->routeToUserPage($loginUser);
-            }
+            return $loginService->redirectRouteByUser($loginUser);
         }
 
         return $next($request);

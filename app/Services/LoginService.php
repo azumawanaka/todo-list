@@ -34,12 +34,12 @@ class LoginService
     public function redirectRouteByUser(User $loginUser): RedirectResponse
     {
         try {
-            $user = Auth::user();
+            // $user = Auth::user();
             if ($loginUser->isAdminUser()) {
-                return $this->routeToAdminPage($user);
+                return $this->routeToAdminPage();
             }
             if ($loginUser->isRegularUser()) {
-                return $this->routeToUserPage($user);
+                return $this->routeToUserPage();
             }
         } catch (\Exception $er) {
             \Log::error($er->getMessage());
@@ -47,12 +47,12 @@ class LoginService
         }
     }
 
-    public function routeToAdminPage(User $user): RedirectResponse
+    public function routeToAdminPage(): RedirectResponse
     {
         return redirect()->intended(route('users.lists'));
     }
 
-    public function routeToUserPage(User $user): RedirectResponse
+    public function routeToUserPage(): RedirectResponse
     {
         return redirect()->intended(route('user.home'));
     }

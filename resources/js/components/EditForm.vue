@@ -8,10 +8,16 @@
                 <form v-on:submit="updateTask">
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="text" name="summary" class="form-control custom-field" placeholder="Summary" v-model="currentTask.summary">
+                            <input type="text" :class="['form-control custom-field', errors.summary ? 'is-invalid' : '']" autofocus="autofocus" name="summary" placeholder="Summary" v-model="currentTask.summary">
+                            <span v-if="errors.summary" class="invalid-feedback" role="alert">
+                                <strong>{{ errors.summary }}</strong>
+                            </span>
                         </div>
                         <div class="form-group">
-                            <textarea name="description" class="form-control custom-field" cols="30" rows="5" placeholder="Description" v-model="currentTask.description"></textarea>
+                            <textarea name="description" :class="['form-control custom-field', errors.description ? 'is-invalid' : '']" cols="30" rows="5" placeholder="Description" v-model="currentTask.description"></textarea>
+                            <span v-if="errors.description" class="invalid-feedback" role="alert">
+                                <strong>{{ errors.description }}</strong>
+                            </span>
                         </div>
                         <div class="form-group">
                             <input type="datetime-local" name="due_date" class="form-control custom-field" placeholder="Due date" :value="toDate(currentTask.due_date)">
@@ -41,8 +47,9 @@
                task: {
                     summary: '',
                     description: '',
-                    due_date: ''
-               }
+                    due_date: '',
+               },
+               errors: [],
             }
         },
         created() {
@@ -57,16 +64,23 @@
             },
             updateTask(e) {
                 e.preventDefault()
-                axios.put(`/tasks/${this.currentTask.taskId}`, this.currentTask).then(response => {
-                    $('#editTask').modal('toggle')
+                axios.put(`/tasks/${this.currentTask.taskId}`, this.currentTask)
+                    .then(response => {
+                        $('#editTask').modal('toggle')
 
-                    this.currentTask.summary = ''
-                    this.currentTask.description = ''
-                    this.currentTask.due_date = ''
-                })
-                .catch(function (error) {
-                    // let $err = error.response.data.errors
-                })
+                        this.currentTask.summary = ''
+                        this.currentTask.description = ''
+                        this.currentTask.due_date = ''
+
+                        this.errors.clear()
+                    })
+                    .catch(error => {
+                        let err = error.response.data.errors;
+                        this.errors = {
+                            summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+                            description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null,
+                        };
+                    });
             },
             toDate(date) {
                 return moment(date).format("YYYY-MM-DDTHH:mm")

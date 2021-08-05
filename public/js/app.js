@@ -1880,6 +1880,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['currentTask'],
@@ -1889,7 +1895,8 @@ __webpack_require__.r(__webpack_exports__);
         summary: '',
         description: '',
         due_date: ''
-      }
+      },
+      errors: []
     };
   },
   created: function created() {
@@ -1912,7 +1919,15 @@ __webpack_require__.r(__webpack_exports__);
         _this2.currentTask.summary = '';
         _this2.currentTask.description = '';
         _this2.currentTask.due_date = '';
-      })["catch"](function (error) {// let $err = error.response.data.errors
+
+        _this2.errors.clear();
+      })["catch"](function (error) {
+        var err = error.response.data.errors;
+        _this2.errors = {
+          summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+          description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
+        };
+        return false;
       });
     },
     toDate: function toDate(date) {
@@ -1934,6 +1949,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -1967,14 +1984,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       task: {
         summary: '',
         description: '',
-        due_date: ''
-      }
+        due_date: moment__WEBPACK_IMPORTED_MODULE_0___default()().format("YYYY-MM-DDTHH:mm")
+      },
+      errors: []
     };
   },
   methods: {
@@ -1989,7 +2014,14 @@ __webpack_require__.r(__webpack_exports__);
         _this.task.summary = '';
         _this.task.description = '';
         _this.task.due_date = '';
-      })["catch"](function (error) {// let $err = error.response.data.errors
+
+        _this.errors.clear();
+      })["catch"](function (error) {
+        var err = error.response.data.errors;
+        _this.errors = {
+          summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+          description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
+        };
       });
     }
   }
@@ -2228,6 +2260,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2261,6 +2295,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ["user"],
   data: function data() {
@@ -2269,8 +2310,9 @@ __webpack_require__.r(__webpack_exports__);
         id: this.user.uId,
         summary: '',
         description: '',
-        due_date: ''
-      }
+        due_date: moment__WEBPACK_IMPORTED_MODULE_0___default()().format("YYYY-MM-DDTHH:mm")
+      },
+      errors: []
     };
   },
   watch: {
@@ -2290,7 +2332,14 @@ __webpack_require__.r(__webpack_exports__);
         _this.task.summary = '';
         _this.task.description = '';
         _this.task.due_date = '';
-      })["catch"](function (error) {// let $err = error.response.data.errors
+
+        _this.errors.clear();
+      })["catch"](function (error) {
+        var err = error.response.data.errors;
+        _this.errors = {
+          summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+          description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
+        };
       });
     }
   }
@@ -65884,9 +65933,13 @@ var render = function() {
                       expression: "currentTask.summary"
                     }
                   ],
-                  staticClass: "form-control custom-field",
+                  class: [
+                    "form-control custom-field",
+                    _vm.errors.summary ? "is-invalid" : ""
+                  ],
                   attrs: {
                     type: "text",
+                    autofocus: "autofocus",
                     name: "summary",
                     placeholder: "Summary"
                   },
@@ -65899,7 +65952,18 @@ var render = function() {
                       _vm.$set(_vm.currentTask, "summary", $event.target.value)
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.summary
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -65912,7 +65976,10 @@ var render = function() {
                       expression: "currentTask.description"
                     }
                   ],
-                  staticClass: "form-control custom-field",
+                  class: [
+                    "form-control custom-field",
+                    _vm.errors.description ? "is-invalid" : ""
+                  ],
                   attrs: {
                     name: "description",
                     cols: "30",
@@ -65932,7 +65999,18 @@ var render = function() {
                       )
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.description
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -66043,9 +66121,13 @@ var render = function() {
                       expression: "task.summary"
                     }
                   ],
-                  staticClass: "form-control custom-field",
+                  class: [
+                    "form-control custom-field",
+                    _vm.errors.summary ? "is-invalid" : ""
+                  ],
                   attrs: {
                     type: "text",
+                    autofocus: "autofocus",
                     name: "summary",
                     placeholder: "Summary"
                   },
@@ -66058,7 +66140,18 @@ var render = function() {
                       _vm.$set(_vm.task, "summary", $event.target.value)
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.summary
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -66071,7 +66164,10 @@ var render = function() {
                       expression: "task.description"
                     }
                   ],
-                  staticClass: "form-control custom-field",
+                  class: [
+                    "form-control custom-field",
+                    _vm.errors.description ? "is-invalid" : ""
+                  ],
                   attrs: {
                     name: "description",
                     cols: "30",
@@ -66087,7 +66183,18 @@ var render = function() {
                       _vm.$set(_vm.task, "description", $event.target.value)
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.description
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -66631,13 +66738,7 @@ var render = function() {
     [
       _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
         _c("div", { staticClass: "modal-content" }, [
-          _c("div", { staticClass: "modal-header" }, [
-            _c(
-              "h5",
-              { staticClass: "modal-title", attrs: { id: "userTaskLabel" } },
-              [_vm._v("New Task " + _vm._s(_vm.user))]
-            )
-          ]),
+          _vm._m(0),
           _vm._v(" "),
           _c("form", { on: { submit: _vm.createTask } }, [
             _c("div", { staticClass: "modal-body" }, [
@@ -66651,9 +66752,13 @@ var render = function() {
                       expression: "task.summary"
                     }
                   ],
-                  staticClass: "form-control custom-field",
+                  class: [
+                    "form-control custom-field",
+                    _vm.errors.summary ? "is-invalid" : ""
+                  ],
                   attrs: {
                     type: "text",
+                    autofocus: "autofocus",
                     name: "summary",
                     placeholder: "Summary"
                   },
@@ -66666,7 +66771,18 @@ var render = function() {
                       _vm.$set(_vm.task, "summary", $event.target.value)
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.summary
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -66679,7 +66795,10 @@ var render = function() {
                       expression: "task.description"
                     }
                   ],
-                  staticClass: "form-control custom-field",
+                  class: [
+                    "form-control custom-field",
+                    _vm.errors.description ? "is-invalid" : ""
+                  ],
                   attrs: {
                     name: "description",
                     cols: "30",
@@ -66695,7 +66814,18 @@ var render = function() {
                       _vm.$set(_vm.task, "description", $event.target.value)
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.errors.description
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -66727,7 +66857,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _vm._m(1)
           ])
         ])
       ])
@@ -66735,6 +66865,16 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title", attrs: { id: "userTaskLabel" } }, [
+        _vm._v("New Task")
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

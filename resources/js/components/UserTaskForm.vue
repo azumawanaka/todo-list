@@ -3,15 +3,21 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="userTaskLabel">New Task {{ user }}</h5>
+                    <h5 class="modal-title" id="userTaskLabel">New Task</h5>
                 </div>
                 <form v-on:submit="createTask">
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="text" class="form-control custom-field" name="summary" placeholder="Summary" v-model="task.summary">
+                            <input type="text" :class="['form-control custom-field', errors.summary ? 'is-invalid' : '']" autofocus="autofocus" name="summary" placeholder="Summary" v-model="task.summary">
+                            <span v-if="errors.summary" class="invalid-feedback" role="alert">
+                                <strong>{{ errors.summary }}</strong>
+                            </span>
                         </div>
                         <div class="form-group">
-                            <textarea name="description" class="form-control custom-field" cols="30" rows="5" placeholder="Description" v-model="task.description"></textarea>
+                            <textarea name="description" :class="['form-control custom-field', errors.description ? 'is-invalid' : '']" cols="30" rows="5" placeholder="Description" v-model="task.description"></textarea>
+                            <span v-if="errors.description" class="invalid-feedback" role="alert">
+                                <strong>{{ errors.description }}</strong>
+                            </span>
                         </div>
                         <div class="form-group">
                             <input type="datetime-local" class="form-control custom-field" name="due_date" placeholder="Due date" v-model="task.due_date">
@@ -32,6 +38,8 @@
 </template>
 
 <script>
+    import moment from 'moment';
+
     export default {
         props: ["user"],
         data() {
@@ -40,8 +48,9 @@
                     id: this.user.uId,
                     summary: '',
                     description: '',
-                    due_date: '',
-               }
+                    due_date: moment().format("YYYY-MM-DDTHH:mm"),
+               },
+               errors: [],
             }
         },
         watch: {
@@ -60,10 +69,16 @@
                     this.task.summary = ''
                     this.task.description = ''
                     this.task.due_date = ''
+
+                    this.errors.clear()
                 })
-                .catch(function (error) {
-                    // let $err = error.response.data.errors
-                })
+                .catch(error => {
+                    let err = error.response.data.errors;
+                    this.errors = {
+                        summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+                        description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null,
+                    };
+                });
             }
         }
     }
