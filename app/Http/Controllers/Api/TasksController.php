@@ -60,7 +60,9 @@ class TasksController extends Controller
 
         broadcast(new TaskUpdated($task))->toOthers();
 
-        return response($task);
+        $tasks = $this->taskService->getTaskByUserId($task->user_id);
+
+        return response($tasks);
     }
 
     /**
@@ -69,9 +71,9 @@ class TasksController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-
         broadcast(new TaskDeleted($task))->toOthers();
+        $tasks = $this->taskService->getTaskByUserId($task->user_id);
 
-        return response();
+        return response($tasks);
     }
 }

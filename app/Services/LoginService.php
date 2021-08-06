@@ -34,11 +34,9 @@ class LoginService
     public function redirectRouteByUser(User $loginUser): RedirectResponse
     {
         try {
-            // $user = Auth::user();
-            if ($loginUser->isAdminUser()) {
+            if ($loginUser->role == 1) {
                 return $this->routeToAdminPage();
-            }
-            if ($loginUser->isRegularUser()) {
+            } else {
                 return $this->routeToUserPage();
             }
         } catch (\Exception $er) {
@@ -49,11 +47,11 @@ class LoginService
 
     public function routeToAdminPage(): RedirectResponse
     {
-        return redirect()->intended(route('users.lists'));
+        return redirect('/user_lists');
     }
 
     public function routeToUserPage(): RedirectResponse
     {
-        return redirect()->intended(route('user.home'));
+        return redirect('/');
     }
 }

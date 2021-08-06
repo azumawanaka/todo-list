@@ -33,7 +33,13 @@
                     </div>
                 </div>
 
-                <div class="form-group row mb-0 mt-5">
+                @if ($errors->has('auth'))
+                <div class="form-group text-left mb-0">
+                    <small class="text-danger"><i class="fa fa-warning"></i> {{ $errors->first('auth') }}</small>
+                </div>
+                @endif
+
+                <div class="form-group row mb-0 mt-3">
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-dark btn-block">
                             {{ __('Login') }}

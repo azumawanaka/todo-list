@@ -19,7 +19,7 @@
                 </div>
                 <div class="opt">
                     <a href="javascript:void()" class="text-info" @click='editTask(task)' data-toggle="modal" data-target="#editTask"><i class="fa fa-pencil-square-o"></i></a>
-                    <a href="javascript:void()" class="text-danger" @click='deleteTask(task)'><i class="fa fa-times-circle-o"></i></a>
+                    <a href="javascript:void()" class="text-danger" @click='removeTask(task)'><i class="fa fa-times-circle-o"></i></a>
                 </div>
             </li>
         </ul>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="opt">
                     <a href="javascript:void()" class="text-info" @click='editTask(task)' data-toggle="modal" data-target="#editTask"><i class="fa fa-pencil-square-o"></i></a>
-                    <a href="javascript:void()" class="text-danger" @click='deleteTask(task)'><i class="fa fa-times-circle-o"></i></a>
+                    <a href="javascript:void()" class="text-danger" @click='removeTask(task)'><i class="fa fa-times-circle-o"></i></a>
                 </div>
             </li>
         </ul>
@@ -61,18 +61,13 @@
                 currentTask: [],
                 summary: '',
                 description: '',
-                due_date: ''
+                due_date: '',
             }
         },
         created() {
             this.taskLists();
-            Echo.private('todo')
-            .listen('TaskAdded', (e) => {
-                this.tasks.push({
-                    summary: e.task.summary,
-                    description: e.task.description,
-                    due_date: e.task.due_date_human
-                });
+            Echo.private('todo').listen('TaskAdded', e => {
+                this.taskLists();
             });
         },
         methods: {
@@ -82,12 +77,12 @@
                 });
             },
             updateTaskStatus(task) {
-                axios.put(`/tasks/${task.id}`, task)
+                axios.put(`/tasks/${task.id}`, task);
             },
-            deleteTask(task) {
-                if (confirm("Are you sure you want to delete this task?")) {
-                    axios.delete(`/tasks/${task.id}`, task);
-                }
+            removeTask(task) {
+                axios.delete(`/tasks/${task.id}`).then( (response) =>{
+                    this.tasks = response.data;
+                });
             },
             editTask(task) {
                 this.currentTask = {
@@ -98,10 +93,11 @@
                 }
             },
             taskCreated(task) {
-                this.tasks.push(task)
+                this.tasks.unshift(task)
             },
             taskEdited(task) {
-                this.tasks.push(task)
+                console.log(task)
+                this.tasks = task;
             }
         }
     };

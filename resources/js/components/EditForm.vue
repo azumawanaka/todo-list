@@ -20,7 +20,7 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <input type="datetime-local" name="due_date" class="form-control custom-field" placeholder="Due date" :value="toDate(currentTask.due_date)">
+                            <input type="datetime-local" name="due_date" class="form-control custom-field" placeholder="Due date" v-model="currentTask.due_date">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -52,20 +52,17 @@
                errors: [],
             }
         },
-        created() {
-            Echo.private('todo')
-            .listen('TaskAdded', (e) => {
-                this.taskLists();
-            });
+        watch: {
+            currentTask: function () {
+                this.currentTask.due_date = moment(this.currentTask.due_date).format("YYYY-MM-DDTHH:mm")
+            }
         },
         methods: {
-            taskLists() {
-                axios.get('/tasks');
-            },
             updateTask(e) {
                 e.preventDefault()
                 axios.put(`/tasks/${this.currentTask.taskId}`, this.currentTask)
                     .then(response => {
+                        this.$emit('task:edited', response.data)
                         $('#editTask').modal('toggle')
 
                         this.currentTask.summary = ''
@@ -75,11 +72,13 @@
                         this.errors.clear()
                     })
                     .catch(error => {
-                        let err = error.response.data.errors;
-                        this.errors = {
-                            summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
-                            description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null,
-                        };
+                        if (error.response && error.response.data) {
+                            let err = error.response.data.errors;
+                            this.errors = {
+                                summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+                                description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null,
+                            };
+                        }
                     });
             },
             toDate(date) {

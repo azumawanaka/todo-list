@@ -36,11 +36,19 @@
     export default {
         props: ['userTasks', 'user', 'visible'],
         data() {
-            return {
-                task: []
-            }
+            return {}
+        },
+        created() {
+            Echo.private('todo').listen('TaskUpdated', e => {
+                this.tasksLists();
+            });
         },
         methods: {
+            tasksLists() {
+                axios.get(`/users/${this.user.uId}`).then(response => {
+                    this.$emit("userTasks:tasks", response.data);
+                });
+            },
             goBack() {
                 this.$emit('userTasks:back');
             },

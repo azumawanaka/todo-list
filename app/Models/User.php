@@ -52,6 +52,7 @@ class User extends Authenticatable
     protected $appends = [
         'last_update_human',
         'last_update_time_human',
+        'last_login_human',
     ];
 
     public function tasks(): HasMany
@@ -69,6 +70,11 @@ class User extends Authenticatable
     {
         $role = $this->where('role', 0)->first();
         return $role->role != 1;
+    }
+
+    public function getLastLoginHumanAttribute(): string
+    {
+        return $this->last_update->diffForHumans();
     }
 
     public function getLastUpdateHumanAttribute(): string

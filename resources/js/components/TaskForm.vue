@@ -65,11 +65,13 @@
                     this.errors.clear()
                 })
                 .catch(error => {
-                    let err = error.response.data.errors;
-                    this.errors = {
-                        summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
-                        description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null,
-                    };
+                    if (error.response && error.response.data) {
+                        let err = error.response.data.errors;
+                        this.errors = {
+                            summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+                            description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null,
+                        };
+                    }
                 });
             }
         }

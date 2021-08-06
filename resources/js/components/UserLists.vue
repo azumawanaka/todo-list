@@ -12,7 +12,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in users">
-                            <td>{{ user.name }} <small class="text-muted d-block">Active {{ user.last_update_human }}</small></td>
+                            <td>{{ user.name }} <small class="text-muted d-block">Active {{ user.last_login_human }}</small></td>
                             <td>{{ user.tasks_count }}</td>
                             <td>{{ user.last_update_human }} <small class="text-muted d-block">{{ user.last_update_time_human }}</small></td>
                             <td class="dropdown">
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <user-tasks v-on:userTasks:back="backToList" :userTasks="userTasks" :user="user" v-bind:visible="taskVisibility"></user-tasks>
+        <user-tasks v-on:userTasks:back="backToList" v-on:userTasks:tasks="updateUserTasks" :userTasks="userTasks" :user="user" v-bind:visible="taskVisibility"></user-tasks>
     </div>
 
 </template>
@@ -76,6 +76,9 @@
             },
             backToList() {
                 this.taskVisibility = false;
+            },
+            updateUserTasks(tasks) {
+                this.userTasks = tasks;
             }
         }
     };

@@ -1899,35 +1899,33 @@ __webpack_require__.r(__webpack_exports__);
       errors: []
     };
   },
-  created: function created() {
-    var _this = this;
-
-    Echo["private"]('todo').listen('TaskAdded', function (e) {
-      _this.taskLists();
-    });
+  watch: {
+    currentTask: function currentTask() {
+      this.currentTask.due_date = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.currentTask.due_date).format("YYYY-MM-DDTHH:mm");
+    }
   },
   methods: {
-    taskLists: function taskLists() {
-      axios.get('/tasks');
-    },
     updateTask: function updateTask(e) {
-      var _this2 = this;
+      var _this = this;
 
       e.preventDefault();
       axios.put("/tasks/".concat(this.currentTask.taskId), this.currentTask).then(function (response) {
-        $('#editTask').modal('toggle');
-        _this2.currentTask.summary = '';
-        _this2.currentTask.description = '';
-        _this2.currentTask.due_date = '';
+        _this.$emit('task:edited', response.data);
 
-        _this2.errors.clear();
+        $('#editTask').modal('toggle');
+        _this.currentTask.summary = '';
+        _this.currentTask.description = '';
+        _this.currentTask.due_date = '';
+
+        _this.errors.clear();
       })["catch"](function (error) {
-        var err = error.response.data.errors;
-        _this2.errors = {
-          summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
-          description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
-        };
-        return false;
+        if (error.response && error.response.data) {
+          var err = error.response.data.errors;
+          _this.errors = {
+            summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+            description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
+          };
+        }
       });
     },
     toDate: function toDate(date) {
@@ -2017,11 +2015,13 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.errors.clear();
       })["catch"](function (error) {
-        var err = error.response.data.errors;
-        _this.errors = {
-          summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
-          description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
-        };
+        if (error.response && error.response.data) {
+          var err = error.response.data.errors;
+          _this.errors = {
+            summary: err.summary ? err.summary.toString().replace(/[^\w\s]/gi, '') : null,
+            description: err.description ? err.description.toString().replace(/[^\w\s]/gi, '') : null
+          };
+        }
       });
     }
   }
@@ -2110,11 +2110,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.taskLists();
     Echo["private"]('todo').listen('TaskAdded', function (e) {
-      _this.tasks.push({
-        summary: e.task.summary,
-        description: e.task.description,
-        due_date: e.task.due_date_human
-      });
+      _this.taskLists();
     });
   },
   methods: {
@@ -2128,10 +2124,12 @@ __webpack_require__.r(__webpack_exports__);
     updateTaskStatus: function updateTaskStatus(task) {
       axios.put("/tasks/".concat(task.id), task);
     },
-    deleteTask: function deleteTask(task) {
-      if (confirm("Are you sure you want to delete this task?")) {
-        axios["delete"]("/tasks/".concat(task.id), task);
-      }
+    removeTask: function removeTask(task) {
+      var _this3 = this;
+
+      axios["delete"]("/tasks/".concat(task.id)).then(function (response) {
+        _this3.tasks = response.data;
+      });
     },
     editTask: function editTask(task) {
       this.currentTask = {
@@ -2142,10 +2140,11 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     taskCreated: function taskCreated(task) {
-      this.tasks.push(task);
+      this.tasks.unshift(task);
     },
     taskEdited: function taskEdited(task) {
-      this.tasks.push(task);
+      console.log(task);
+      this.tasks = task;
     }
   }
 });
@@ -2243,6 +2242,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     backToList: function backToList() {
       this.taskVisibility = false;
+    },
+    updateUserTasks: function updateUserTasks(tasks) {
+      this.userTasks = tasks;
     }
   }
 });
@@ -2395,11 +2397,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['userTasks', 'user', 'visible'],
   data: function data() {
-    return {
-      task: []
-    };
+    return {};
+  },
+  created: function created() {
+    var _this = this;
+
+    Echo["private"]('todo').listen('TaskUpdated', function (e) {
+      _this.tasksLists();
+    });
   },
   methods: {
+    tasksLists: function tasksLists() {
+      var _this2 = this;
+
+      axios.get("/users/".concat(this.user.uId)).then(function (response) {
+        _this2.$emit("userTasks:tasks", response.data);
+      });
+    },
     goBack: function goBack() {
       this.$emit('userTasks:back');
     },
@@ -66015,13 +66029,29 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.currentTask.due_date,
+                      expression: "currentTask.due_date"
+                    }
+                  ],
                   staticClass: "form-control custom-field",
                   attrs: {
                     type: "datetime-local",
                     name: "due_date",
                     placeholder: "Due date"
                   },
-                  domProps: { value: _vm.toDate(_vm.currentTask.due_date) }
+                  domProps: { value: _vm.currentTask.due_date },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.currentTask, "due_date", $event.target.value)
+                    }
+                  }
                 })
               ])
             ]),
@@ -66412,7 +66442,7 @@ var render = function() {
                         attrs: { href: "javascript:void()" },
                         on: {
                           click: function($event) {
-                            return _vm.deleteTask(task)
+                            return _vm.removeTask(task)
                           }
                         }
                       },
@@ -66542,7 +66572,7 @@ var render = function() {
                         attrs: { href: "javascript:void()" },
                         on: {
                           click: function($event) {
-                            return _vm.deleteTask(task)
+                            return _vm.removeTask(task)
                           }
                         }
                       },
@@ -66607,7 +66637,7 @@ var render = function() {
                       _c("td", [
                         _vm._v(_vm._s(user.name) + " "),
                         _c("small", { staticClass: "text-muted d-block" }, [
-                          _vm._v("Active " + _vm._s(user.last_update_human))
+                          _vm._v("Active " + _vm._s(user.last_login_human))
                         ])
                       ]),
                       _vm._v(" "),
@@ -66660,7 +66690,10 @@ var render = function() {
           user: _vm.user,
           visible: _vm.taskVisibility
         },
-        on: { "userTasks:back": _vm.backToList }
+        on: {
+          "userTasks:back": _vm.backToList,
+          "userTasks:tasks": _vm.updateUserTasks
+        }
       })
     ],
     1
