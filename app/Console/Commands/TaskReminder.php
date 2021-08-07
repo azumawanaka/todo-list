@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Services\TaskService;
+use App\Models\Task;
 
 class TaskReminder extends Command
 {
@@ -17,17 +19,31 @@ class TaskReminder extends Command
     protected $description = 'Gives a reminder to users tasks';
 
     /**
+     * @var TaskService @taskService
+     */
+    protected $taskService;
+
+    /**
      * @return void
      */
-    public function __construct()
+    public function __construct(TaskService $taskService)
     {
         parent::__construct();
+
+        $this->taskService = $taskService;
     }
 
     public function handle()
     {
-        // \Log::info('Task reminder works...');
+        $tasks = $this->taskService->fetchTaskBeforeDueDate();
 
-        $this->info('Task reminder works...');
+        if (!$tasks->isEmpty()) {
+            foreach ($tasks as $task) {
+                $remind = true;
+                $isUpdated = $this->taskService->updateTaskReminder($task, $remind);
+                \Log::info($task, $isUpdated);
+            }
+            \Log::info($tasks);
+        }
     }
 }

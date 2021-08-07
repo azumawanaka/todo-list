@@ -19,6 +19,7 @@ class Task extends Model
         'due_date',
         'completed_at',
         'deleted_at',
+        'remind',
     ];
 
     protected $dates = [

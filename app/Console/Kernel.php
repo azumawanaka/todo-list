@@ -4,7 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Models\Task;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,13 +13,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
-            Task::where('user_id', 2)
-                ->get()
-                ->each
-                ->delete();
-        })->hourly();
-        // $schedule->command('task:reminder')->everyMinute();
+        $schedule->command('task:reminder')->everyMinute();
     }
 
     protected function commands(): void
