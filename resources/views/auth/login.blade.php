@@ -1,4 +1,5 @@
-@extends('layouts.app')
+
+@extends(empty($title) ? 'layouts.app' : 'layouts.admin.app')
 
 @section('content')
 <div class="container">
@@ -11,7 +12,7 @@
 
                 <div class="form-group row">
                     <div class="col-md-12">
-                        <input id="email" type="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <input id="email" type="email" placeholder="Email" class="form-control input-gray @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -23,7 +24,7 @@
 
                 <div class="form-group row">
                     <div class="col-md-12">
-                        <input id="password" type="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                        <input id="password" type="password" placeholder="Password" class="form-control input-gray @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
                         @error('password')
                             <span class="invalid-feedback" role="alert">

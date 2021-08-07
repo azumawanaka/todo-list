@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="users" v-if="!taskVisibility">
-            <h5>All Users</h5>
+            <h1 class="h3 mb-4 text-gray-800">Users</h1>
+
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>

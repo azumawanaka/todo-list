@@ -24,3 +24,22 @@
 .h2 {
     font-size: 2rem;
 }
+
+body, #app, #wrapper {
+    height: 100vh;
+}
+
+.bg-dark {
+    background-color: $black!important;
+}
+
+.input-gray {
+    background: #F6F6F6;
+    border: 1px solid #E8E8E8;
+    box-sizing: border-box;
+    border-radius: 8px;
+    &::placeholder {
+        font-size: 12px;
+        color: #BDBDBD;
+    }
+}

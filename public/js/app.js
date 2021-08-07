@@ -2204,6 +2204,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['visible'],
   data: function data() {
@@ -66624,7 +66625,9 @@ var render = function() {
     [
       !_vm.taskVisibility
         ? _c("div", { staticClass: "users" }, [
-            _c("h5", [_vm._v("All Users")]),
+            _c("h1", { staticClass: "h3 mb-4 text-gray-800" }, [
+              _vm._v("Users")
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "table-responsive" }, [
               _c("table", { staticClass: "table table-hover" }, [
