@@ -3,19 +3,19 @@
         <div class="users" v-if="!taskVisibility">
             <h1 class="h3 mb-4 text-gray-800">Users</h1>
 
-            <div class="table-responsive">
+            <div class="table-responsive py-5 bg-white">
                 <table class="table table-hover">
                     <thead>
-                        <th>User Details</th>
-                        <th>Total Tasks</th>
-                        <th>Last Updated</th>
-                        <th></th>
+                        <th class="px-4">User Details</th>
+                        <th class="px-4">Total Tasks</th>
+                        <th class="px-4">Last Updated</th>
+                        <th class="px-4"></th>
                     </thead>
                     <tbody>
                         <tr v-for="user in users">
-                            <td>{{ user.name }} <small class="text-muted d-block">Active {{ user.last_login_human }}</small></td>
-                            <td>{{ user.tasks_count }}</td>
-                            <td>{{ user.last_update_human }} <small class="text-muted d-block">{{ user.last_update_time_human }}</small></td>
+                            <td class="px-4">{{ user.name }} <small class="text-muted d-block">Active {{ user.last_login_human }}</small></td>
+                            <td class="px-4">{{ user.tasks_count }}</td>
+                            <td class="px-4">{{ user.last_update_human }} <small class="text-muted d-block">{{ user.last_update_time_human }}</small></td>
                             <td class="dropdown">
                                 <a
                                     href="#"
@@ -52,10 +52,14 @@
                 taskVisibility: false
             }
         },
-        created() {
+        mounted() {
             this.userLists();
             Echo.private('todo')
             .listen('TaskAdded', (e) => {
+                this.userLists();
+            });
+            Echo.private('todo')
+            .listen('TaskDeleted', (e) => {
                 this.userLists();
             });
         },
@@ -77,6 +81,7 @@
             },
             backToList() {
                 this.taskVisibility = false;
+                this.userTasks = this.userTasks;
             },
             updateUserTasks(tasks) {
                 this.userTasks = tasks;

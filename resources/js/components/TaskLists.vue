@@ -3,7 +3,7 @@
         <h5>Incomplete</h5>
         <ul class="list-group mb-4">
             <li class="list-group-item border-0 bg-transparent d-flex" v-for="task in tasks"  v-if="!task.completed_at">
-                <div class="item incomplete">
+                <div class="item incomplete w-20">
                     <input
                         type="checkbox"
                         class="form-check-input"
@@ -27,7 +27,7 @@
         <h5>Completed</h5>
         <ul class="list-group">
             <li class="list-group-item border-0 bg-transparent d-flex" v-for="task in tasks" v-if="task.completed_at">
-                <div class="item completed">
+                <div class="item completed w-20">
                     <input
                         type="checkbox"
                         class="form-check-input"

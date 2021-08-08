@@ -5,19 +5,19 @@
             <a href="#" class="btn btn-default text-dark" @click="newTask(user)" data-toggle="modal" data-target="#userTask"><i class="fa fa-plus-square"></i> Add Task</a>
         </div>
         <h5>All Tasks</h5>
-        <div class="table-responsive">
+        <div class="table-responsive py-5 bg-white">
             <table class="table table-hover">
                 <thead>
-                    <th>Task Summary</th>
-                    <th>Status</th>
-                    <th>Due date</th>
-                    <th></th>
+                    <th class="px-4">Task Summary</th>
+                    <th class="px-4">Status</th>
+                    <th class="px-4">Due date</th>
+                    <th class="px-4"></th>
                 </thead>
                 <tbody>
                     <tr v-for="task in userTasks">
-                        <td>{{ task.summary }} <small class="text-muted d-block">Active {{ task.updated_at_human }}</small></td>
-                        <td>{{ task.completed_at !== null ? 'Completed' : 'Incomplete' }}</td>
-                        <td>{{ task.due_date_carbon }} <small class="text-muted d-block">{{ task.due_date_time_carbon }}</small></td>
+                        <td class="px-4">{{ task.summary }} <small class="text-muted d-block">Active {{ task.updated_at_human }}</small></td>
+                        <td class="px-4">{{ task.completed_at != null ? 'Completed' : 'Incomplete' }}</td>
+                        <td class="px-4">{{ task.due_date_carbon }} <small class="text-muted d-block">{{ task.due_date_time_carbon }}</small></td>
                         <td class="dropdown">
                             <a href="#" class="text-muted">
                                 <i class="fa fa-ellipsis-v"></i>
@@ -42,6 +42,9 @@
             Echo.private('todo').listen('TaskUpdated', e => {
                 this.tasksLists();
             });
+            Echo.private('todo').listen('TaskDeleted', e => {
+                this.tasksLists();
+            });
         },
         methods: {
             tasksLists() {
@@ -56,7 +59,7 @@
                 this.user = user;
             },
             taskCreated(task) {
-                this.task.push(task);
+                this.userTasks = task;
             }
         }
     };

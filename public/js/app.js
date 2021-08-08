@@ -1886,6 +1886,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['currentTask'],
@@ -1949,6 +1958,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2215,11 +2233,14 @@ __webpack_require__.r(__webpack_exports__);
       taskVisibility: false
     };
   },
-  created: function created() {
+  mounted: function mounted() {
     var _this = this;
 
     this.userLists();
     Echo["private"]('todo').listen('TaskAdded', function (e) {
+      _this.userLists();
+    });
+    Echo["private"]('todo').listen('TaskDeleted', function (e) {
       _this.userLists();
     });
   },
@@ -2243,6 +2264,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     backToList: function backToList() {
       this.taskVisibility = false;
+      this.userTasks = this.userTasks;
     },
     updateUserTasks: function updateUserTasks(tasks) {
       this.userTasks = tasks;
@@ -2265,6 +2287,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2406,6 +2437,9 @@ __webpack_require__.r(__webpack_exports__);
     Echo["private"]('todo').listen('TaskUpdated', function (e) {
       _this.tasksLists();
     });
+    Echo["private"]('todo').listen('TaskDeleted', function (e) {
+      _this.tasksLists();
+    });
   },
   methods: {
     tasksLists: function tasksLists() {
@@ -2422,7 +2456,7 @@ __webpack_require__.r(__webpack_exports__);
       this.user = user;
     },
     taskCreated: function taskCreated(task) {
-      this.task.push(task);
+      this.userTasks = task;
     }
   }
 });
@@ -65936,9 +65970,11 @@ var render = function() {
         _c("div", { staticClass: "modal-content" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("form", { on: { submit: _vm.updateTask } }, [
+          _c("form", { staticClass: "px-3", on: { submit: _vm.updateTask } }, [
             _c("div", { staticClass: "modal-body" }, [
-              _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "form-group input-group" }, [
+                _vm._m(1),
+                _vm._v(" "),
                 _c("input", {
                   directives: [
                     {
@@ -65981,7 +66017,9 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "form-group input-group" }, [
+                _vm._m(2),
+                _vm._v(" "),
                 _c("textarea", {
                   directives: [
                     {
@@ -66028,7 +66066,9 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "form-group input-group" }, [
+                _vm._m(3),
+                _vm._v(" "),
                 _c("input", {
                   directives: [
                     {
@@ -66057,7 +66097,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(1)
+            _vm._m(4)
           ])
         ])
       ])
@@ -66073,6 +66113,39 @@ var staticRenderFns = [
       _c("h5", { staticClass: "modal-title", attrs: { id: "editTaskLabel" } }, [
         _vm._v("Edit Task")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "d-flex align-items-center" }, [
+      _c("i", {
+        staticClass: "fa fa-comment",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "pt-2" }, [
+      _c("i", {
+        staticClass: "fa fa-align-left",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "d-flex align-items-center" }, [
+      _c("i", {
+        staticClass: "fa fa-clock-o",
+        attrs: { "aria-hidden": "true" }
+      })
     ])
   },
   function() {
@@ -66140,124 +66213,142 @@ var render = function() {
         _c("div", { staticClass: "modal-content" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("form", { on: { submit: _vm.createTask } }, [
+          _c("form", { staticClass: "px-3", on: { submit: _vm.createTask } }, [
             _c("div", { staticClass: "modal-body" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.task.summary,
-                      expression: "task.summary"
-                    }
-                  ],
-                  class: [
-                    "form-control custom-field",
-                    _vm.errors.summary ? "is-invalid" : ""
-                  ],
-                  attrs: {
-                    type: "text",
-                    autofocus: "autofocus",
-                    name: "summary",
-                    placeholder: "Summary"
-                  },
-                  domProps: { value: _vm.task.summary },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.task, "summary", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.summary
-                  ? _c(
-                      "span",
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
                       {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
-                      },
-                      [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
-                    )
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.task.description,
-                      expression: "task.description"
-                    }
-                  ],
-                  class: [
-                    "form-control custom-field",
-                    _vm.errors.description ? "is-invalid" : ""
-                  ],
-                  attrs: {
-                    name: "description",
-                    cols: "30",
-                    rows: "5",
-                    placeholder: "Description"
-                  },
-                  domProps: { value: _vm.task.description },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.summary,
+                        expression: "task.summary"
                       }
-                      _vm.$set(_vm.task, "description", $event.target.value)
+                    ],
+                    class: [
+                      "form-control custom-field",
+                      _vm.errors.summary ? "is-invalid" : ""
+                    ],
+                    attrs: {
+                      type: "text",
+                      autofocus: "autofocus",
+                      name: "summary",
+                      placeholder: "Summary"
+                    },
+                    domProps: { value: _vm.task.summary },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "summary", $event.target.value)
+                      }
                     }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.description
-                  ? _c(
-                      "span",
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.summary
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
+                      )
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
                       {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
-                      },
-                      [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
-                    )
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.task.due_date,
-                      expression: "task.due_date"
-                    }
-                  ],
-                  staticClass: "form-control custom-field",
-                  attrs: {
-                    type: "datetime-local",
-                    name: "due_date",
-                    placeholder: "Due date"
-                  },
-                  domProps: { value: _vm.task.due_date },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.description,
+                        expression: "task.description"
                       }
-                      _vm.$set(_vm.task, "due_date", $event.target.value)
+                    ],
+                    class: [
+                      "form-control custom-field",
+                      _vm.errors.description ? "is-invalid" : ""
+                    ],
+                    attrs: {
+                      name: "description",
+                      cols: "30",
+                      rows: "5",
+                      placeholder: "Description"
+                    },
+                    domProps: { value: _vm.task.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "description", $event.target.value)
+                      }
                     }
-                  }
-                })
-              ])
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.description
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
+                      )
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.due_date,
+                        expression: "task.due_date"
+                      }
+                    ],
+                    staticClass: "form-control custom-field",
+                    attrs: {
+                      type: "datetime-local",
+                      name: "due_date",
+                      placeholder: "Due date"
+                    },
+                    domProps: { value: _vm.task.due_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "due_date", $event.target.value)
+                      }
+                    }
+                  })
+                ]
+              )
             ]),
             _vm._v(" "),
-            _vm._m(1)
+            _vm._m(4)
           ])
         ])
       ])
@@ -66279,20 +66370,56 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c("div", { staticClass: "col-md-12 text-center" }, [
+    return _c("span", { staticClass: "d-flex align-items-center" }, [
+      _c("i", {
+        staticClass: "fa fa-comment",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "pt-2" }, [
+      _c("i", {
+        staticClass: "fa fa-align-left",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "d-flex align-items-center" }, [
+      _c("i", {
+        staticClass: "fa fa-clock-o",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8 text-center" }, [
         _c(
           "button",
-          { staticClass: "btn btn-dark btn-md", attrs: { type: "submit" } },
+          {
+            staticClass: "btn btn-dark btn-block rounded-btn ",
+            attrs: { type: "submit" }
+          },
           [_vm._v("Save")]
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-12 text-center" }, [
+      _c("div", { staticClass: "col-md-8 text-center" }, [
         _c(
           "button",
           {
-            staticClass: "btn btn-white",
+            staticClass: "btn btn-white btn-block rounded-btn",
             attrs: { type: "button", "data-dismiss": "modal" }
           },
           [_vm._v("Close")]
@@ -66340,7 +66467,7 @@ var render = function() {
                   staticClass: "list-group-item border-0 bg-transparent d-flex"
                 },
                 [
-                  _c("div", { staticClass: "item incomplete" }, [
+                  _c("div", { staticClass: "item incomplete w-20" }, [
                     _c("input", {
                       directives: [
                         {
@@ -66470,7 +66597,7 @@ var render = function() {
                   staticClass: "list-group-item border-0 bg-transparent d-flex"
                 },
                 [
-                  _c("div", { staticClass: "item completed" }, [
+                  _c("div", { staticClass: "item completed w-20" }, [
                     _c("input", {
                       directives: [
                         {
@@ -66629,7 +66756,7 @@ var render = function() {
               _vm._v("Users")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "table-responsive" }, [
+            _c("div", { staticClass: "table-responsive py-5 bg-white" }, [
               _c("table", { staticClass: "table table-hover" }, [
                 _vm._m(0),
                 _vm._v(" "),
@@ -66637,16 +66764,18 @@ var render = function() {
                   "tbody",
                   _vm._l(_vm.users, function(user) {
                     return _c("tr", [
-                      _c("td", [
+                      _c("td", { staticClass: "px-4" }, [
                         _vm._v(_vm._s(user.name) + " "),
                         _c("small", { staticClass: "text-muted d-block" }, [
                           _vm._v("Active " + _vm._s(user.last_login_human))
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(user.tasks_count))]),
+                      _c("td", { staticClass: "px-4" }, [
+                        _vm._v(_vm._s(user.tasks_count))
+                      ]),
                       _vm._v(" "),
-                      _c("td", [
+                      _c("td", { staticClass: "px-4" }, [
                         _vm._v(_vm._s(user.last_update_human) + " "),
                         _c("small", { staticClass: "text-muted d-block" }, [
                           _vm._v(_vm._s(user.last_update_time_human))
@@ -66708,13 +66837,13 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", [
-      _c("th", [_vm._v("User Details")]),
+      _c("th", { staticClass: "px-4" }, [_vm._v("User Details")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Total Tasks")]),
+      _c("th", { staticClass: "px-4" }, [_vm._v("Total Tasks")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Last Updated")]),
+      _c("th", { staticClass: "px-4" }, [_vm._v("Last Updated")]),
       _vm._v(" "),
-      _c("th")
+      _c("th", { staticClass: "px-4" })
     ])
   },
   function() {
@@ -66776,9 +66905,11 @@ var render = function() {
         _c("div", { staticClass: "modal-content" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("form", { on: { submit: _vm.createTask } }, [
+          _c("form", { staticClass: "px-3", on: { submit: _vm.createTask } }, [
             _c("div", { staticClass: "modal-body" }, [
-              _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "form-group input-group" }, [
+                _vm._m(1),
+                _vm._v(" "),
                 _c("input", {
                   directives: [
                     {
@@ -66821,79 +66952,91 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.task.description,
-                      expression: "task.description"
-                    }
-                  ],
-                  class: [
-                    "form-control custom-field",
-                    _vm.errors.description ? "is-invalid" : ""
-                  ],
-                  attrs: {
-                    name: "description",
-                    cols: "30",
-                    rows: "5",
-                    placeholder: "Description"
-                  },
-                  domProps: { value: _vm.task.description },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.task, "description", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.description
-                  ? _c(
-                      "span",
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
                       {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
-                      },
-                      [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
-                    )
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.task.due_date,
-                      expression: "task.due_date"
-                    }
-                  ],
-                  staticClass: "form-control custom-field",
-                  attrs: {
-                    type: "datetime-local",
-                    name: "due_date",
-                    placeholder: "Due date"
-                  },
-                  domProps: { value: _vm.task.due_date },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.description,
+                        expression: "task.description"
                       }
-                      _vm.$set(_vm.task, "due_date", $event.target.value)
+                    ],
+                    class: [
+                      "form-control custom-field",
+                      _vm.errors.description ? "is-invalid" : ""
+                    ],
+                    attrs: {
+                      name: "description",
+                      cols: "30",
+                      rows: "5",
+                      placeholder: "Description"
+                    },
+                    domProps: { value: _vm.task.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "description", $event.target.value)
+                      }
                     }
-                  }
-                })
-              ])
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.description
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
+                      )
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.due_date,
+                        expression: "task.due_date"
+                      }
+                    ],
+                    staticClass: "form-control custom-field",
+                    attrs: {
+                      type: "datetime-local",
+                      name: "due_date",
+                      placeholder: "Due date"
+                    },
+                    domProps: { value: _vm.task.due_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "due_date", $event.target.value)
+                      }
+                    }
+                  })
+                ]
+              )
             ]),
             _vm._v(" "),
-            _vm._m(1)
+            _vm._m(4)
           ])
         ])
       ])
@@ -66915,26 +67058,66 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c("div", { staticClass: "col-md-12 text-center" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-dark btn-md", attrs: { type: "submit" } },
-          [_vm._v("Save")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-12 text-center" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-white",
-            attrs: { type: "button", "data-dismiss": "modal" }
-          },
-          [_vm._v("Close")]
-        )
-      ])
+    return _c("span", { staticClass: "d-flex align-items-center" }, [
+      _c("i", {
+        staticClass: "fa fa-comment",
+        attrs: { "aria-hidden": "true" }
+      })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "pt-2" }, [
+      _c("i", {
+        staticClass: "fa fa-align-left",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "d-flex align-items-center" }, [
+      _c("i", {
+        staticClass: "fa fa-clock-o",
+        attrs: { "aria-hidden": "true" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "modal-footer d-flex justify-content-center" },
+      [
+        _c("div", { staticClass: "col-md-4" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-white btn-block",
+              attrs: { type: "button", "data-dismiss": "modal" }
+            },
+            [_vm._v("Close")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-dark btn-block",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("Save")]
+          )
+        ])
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -67012,7 +67195,7 @@ var render = function() {
           _vm._v(" "),
           _c("h5", [_vm._v("All Tasks")]),
           _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
+          _c("div", { staticClass: "table-responsive py-5 bg-white" }, [
             _c("table", { staticClass: "table table-hover" }, [
               _vm._m(0),
               _vm._v(" "),
@@ -67020,24 +67203,22 @@ var render = function() {
                 "tbody",
                 _vm._l(_vm.userTasks, function(task) {
                   return _c("tr", [
-                    _c("td", [
+                    _c("td", { staticClass: "px-4" }, [
                       _vm._v(_vm._s(task.summary) + " "),
                       _c("small", { staticClass: "text-muted d-block" }, [
                         _vm._v("Active " + _vm._s(task.updated_at_human))
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("td", [
+                    _c("td", { staticClass: "px-4" }, [
                       _vm._v(
                         _vm._s(
-                          task.completed_at !== null
-                            ? "Completed"
-                            : "Incomplete"
+                          task.completed_at != null ? "Completed" : "Incomplete"
                         )
                       )
                     ]),
                     _vm._v(" "),
-                    _c("td", [
+                    _c("td", { staticClass: "px-4" }, [
                       _vm._v(_vm._s(task.due_date_carbon) + " "),
                       _c("small", { staticClass: "text-muted d-block" }, [
                         _vm._v(_vm._s(task.due_date_time_carbon))
@@ -67067,13 +67248,13 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", [
-      _c("th", [_vm._v("Task Summary")]),
+      _c("th", { staticClass: "px-4" }, [_vm._v("Task Summary")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Status")]),
+      _c("th", { staticClass: "px-4" }, [_vm._v("Status")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Due date")]),
+      _c("th", { staticClass: "px-4" }, [_vm._v("Due date")]),
       _vm._v(" "),
-      _c("th")
+      _c("th", { staticClass: "px-4" })
     ])
   },
   function() {

@@ -47,7 +47,7 @@
 
         @auth
             {{-- Logout modal --}}
-            @include('layouts.admin.includes.logout-modal')
+            @include('layouts.includes.logout-modal')
         @endauth
     </div>
 

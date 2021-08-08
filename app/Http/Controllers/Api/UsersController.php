@@ -42,7 +42,8 @@ class UsersController extends Controller
 
         broadcast(new TaskAdded($task))->toOthers();
 
-        return response($task);
+        $tasks = $this->taskService->getTaskByUserId($request->id);
+        return response($tasks);
     }
 
     /**
