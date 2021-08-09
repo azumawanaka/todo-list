@@ -65972,129 +65972,149 @@ var render = function() {
           _vm._v(" "),
           _c("form", { staticClass: "px-3", on: { submit: _vm.updateTask } }, [
             _c("div", { staticClass: "modal-body" }, [
-              _c("div", { staticClass: "form-group input-group" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.currentTask.summary,
-                      expression: "currentTask.summary"
-                    }
-                  ],
-                  class: [
-                    "form-control custom-field",
-                    _vm.errors.summary ? "is-invalid" : ""
-                  ],
-                  attrs: {
-                    type: "text",
-                    autofocus: "autofocus",
-                    name: "summary",
-                    placeholder: "Summary"
-                  },
-                  domProps: { value: _vm.currentTask.summary },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.currentTask, "summary", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.summary
-                  ? _c(
-                      "span",
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
                       {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
-                      },
-                      [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
-                    )
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group input-group" }, [
-                _vm._m(2),
-                _vm._v(" "),
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.currentTask.description,
-                      expression: "currentTask.description"
-                    }
-                  ],
-                  class: [
-                    "form-control custom-field",
-                    _vm.errors.description ? "is-invalid" : ""
-                  ],
-                  attrs: {
-                    name: "description",
-                    cols: "30",
-                    rows: "5",
-                    placeholder: "Description"
-                  },
-                  domProps: { value: _vm.currentTask.description },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.currentTask.summary,
+                        expression: "currentTask.summary"
                       }
-                      _vm.$set(
-                        _vm.currentTask,
-                        "description",
-                        $event.target.value
+                    ],
+                    class: [
+                      "form-control custom-field",
+                      _vm.errors.summary ? "is-invalid" : ""
+                    ],
+                    attrs: {
+                      type: "text",
+                      autofocus: "autofocus",
+                      name: "summary",
+                      placeholder: "Summary"
+                    },
+                    domProps: { value: _vm.currentTask.summary },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.currentTask,
+                          "summary",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.summary
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.errors.summary))])]
                       )
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.description
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
-                      },
-                      [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
-                    )
-                  : _vm._e()
-              ]),
+                    : _vm._e()
+                ]
+              ),
               _vm._v(" "),
-              _c("div", { staticClass: "form-group input-group" }, [
-                _vm._m(3),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.currentTask.due_date,
-                      expression: "currentTask.due_date"
-                    }
-                  ],
-                  staticClass: "form-control custom-field",
-                  attrs: {
-                    type: "datetime-local",
-                    name: "due_date",
-                    placeholder: "Due date"
-                  },
-                  domProps: { value: _vm.currentTask.due_date },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.currentTask.description,
+                        expression: "currentTask.description"
                       }
-                      _vm.$set(_vm.currentTask, "due_date", $event.target.value)
+                    ],
+                    class: [
+                      "form-control custom-field",
+                      _vm.errors.description ? "is-invalid" : ""
+                    ],
+                    attrs: {
+                      name: "description",
+                      cols: "30",
+                      rows: "5",
+                      placeholder: "Description"
+                    },
+                    domProps: { value: _vm.currentTask.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.currentTask,
+                          "description",
+                          $event.target.value
+                        )
+                      }
                     }
-                  }
-                })
-              ])
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.description
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.errors.description))])]
+                      )
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group input-group border-bottom" },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.currentTask.due_date,
+                        expression: "currentTask.due_date"
+                      }
+                    ],
+                    staticClass: "form-control custom-field",
+                    attrs: {
+                      type: "datetime-local",
+                      name: "due_date",
+                      placeholder: "Due date"
+                    },
+                    domProps: { value: _vm.currentTask.due_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.currentTask,
+                          "due_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]
+              )
             ]),
             _vm._v(" "),
             _vm._m(4)
@@ -66152,20 +66172,23 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c("div", { staticClass: "col-md-12 text-center" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-dark btn-md", attrs: { type: "submit" } },
-          [_vm._v("Update")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-12 text-center" }, [
+    return _c("div", { staticClass: "modal-footer justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8 text-center" }, [
         _c(
           "button",
           {
-            staticClass: "btn btn-white",
+            staticClass: "btn btn-dark btn-block rounded-btn ",
+            attrs: { type: "submit" }
+          },
+          [_vm._v("Save")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8 text-center" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-white btn-block rounded-btn",
             attrs: { type: "button", "data-dismiss": "modal" }
           },
           [_vm._v("Close")]

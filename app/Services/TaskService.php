@@ -66,13 +66,13 @@ class TaskService
     public function fetchTaskBeforeDueDate()
     {
         $now = Carbon::now()->addMinutes(5)->toDateTimeString();
-        return Task::where('due_date', '>=', $now)
-            ->where('due_date', '<=', $now)
-            ->where('completed_at', null)
+        return Task::where('due_date', '<', $now)
+            ->whereNull('completed_at')
+            ->where('remind', 0)
             ->get();
     }
 
-    public function updateTaskReminder(Task $task, bool $remind): bool
+    public function updateTaskReminder(Task $task, int $remind): bool
     {
         $task->remind = $remind;
         return $task->save();

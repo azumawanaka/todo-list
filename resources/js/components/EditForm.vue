@@ -7,7 +7,7 @@
                 </div>
                 <form class="px-3" v-on:submit="updateTask">
                     <div class="modal-body">
-                        <div class="form-group input-group">
+                        <div class="form-group input-group border-bottom">
                             <span class="d-flex align-items-center">
                                 <i class="fa fa-comment" aria-hidden="true"></i>
                             </span>
@@ -16,7 +16,7 @@
                                 <strong>{{ errors.summary }}</strong>
                             </span>
                         </div>
-                        <div class="form-group input-group">
+                        <div class="form-group input-group border-bottom">
                             <span class="pt-2">
                                 <i class="fa fa-align-left" aria-hidden="true"></i>
                             </span>
@@ -25,19 +25,19 @@
                                 <strong>{{ errors.description }}</strong>
                             </span>
                         </div>
-                        <div class="form-group input-group">
+                        <div class="form-group input-group border-bottom">
                             <span class="d-flex align-items-center">
                                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                             </span>
                             <input type="datetime-local" name="due_date" class="form-control custom-field" placeholder="Due date" v-model="currentTask.due_date">
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <div class="col-md-12 text-center">
-                            <button type="submit" class="btn btn-dark btn-md">Update</button>
+                    <div class="modal-footer justify-content-center">
+                        <div class="col-md-8 text-center">
+                            <button type="submit" class="btn btn-dark btn-block rounded-btn ">Save</button>
                         </div>
-                        <div class="col-md-12 text-center">
-                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                        <div class="col-md-8 text-center">
+                            <button type="button" class="btn btn-white btn-block rounded-btn" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </form>

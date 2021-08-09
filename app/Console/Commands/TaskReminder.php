@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\TaskService;
 use App\Models\Task;
+use Carbon\Carbon;
 
 class TaskReminder extends Command
 {
@@ -39,11 +40,15 @@ class TaskReminder extends Command
 
         if (!$tasks->isEmpty()) {
             foreach ($tasks as $task) {
-                $remind = true;
-                $isUpdated = $this->taskService->updateTaskReminder($task, $remind);
-                \Log::info($task, $isUpdated);
+                $remind = 1;
+                $now = Carbon::now()->toDateTimeString();
+                $dueDate = Carbon::parse($task->due_date)->addMinutes(5)->toDateTimeString();
+
+                if ($dueDate >= $now && $now <= $dueDate) {
+                    $isUpdated = $this->taskService->updateTaskReminder($task, $remind);
+                    \Log::info(['task' => $task, 'isUpdate' => $isUpdated] );
+                }
             }
-            \Log::info($tasks);
         }
     }
 }
