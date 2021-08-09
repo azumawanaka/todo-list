@@ -9,13 +9,13 @@ php artisan db:seed --class=DummyData
 ```
 
 ## User
-- Admin
+- Admin (/admin/login)
 > Username: admin@example.com
-> password: 111111
+password: 111111
 
-- User
+- User (/login)
 > username: user@example.com
-> password: 111111
+password: 111111
 
 ## UI
 ### User
