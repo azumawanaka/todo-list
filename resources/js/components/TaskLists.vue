@@ -50,6 +50,7 @@
 
         <task-form v-on:task:created="taskCreated"></task-form>
         <edit-form v-on:task:edited="taskEdited" :currentTask="currentTask"></edit-form>
+        <task-reminder :reminderTasks="reminderTasks"></task-reminder>
     </div>
 </template>
 
@@ -62,7 +63,20 @@
                 summary: '',
                 description: '',
                 due_date: '',
+                reminderTasks: [],
             }
+        },
+        mounted() {
+            Echo.private('todo')
+            .listen('TaskReminder', e => {
+                this.reminderTasks.push({
+                    'summary': e.task.summary,
+                    'description': e.task.description,
+                    'taskId': e.task.id,
+                    'userId': e.task.user_id,
+                    'remind': e.task.remind,
+                });
+            });
         },
         created() {
             this.taskLists();
@@ -96,7 +110,6 @@
                 this.tasks.unshift(task)
             },
             taskEdited(task) {
-                console.log(task)
                 this.tasks = task;
             }
         }

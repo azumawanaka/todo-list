@@ -8,7 +8,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     protected $commands = [
-        Commands\TaskReminder::class,
+        Commands\RemindTask::class,
     ];
 
     protected function schedule(Schedule $schedule): void
