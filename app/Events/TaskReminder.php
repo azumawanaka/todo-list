@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TaskAdded implements ShouldBroadcast
+class TaskReminder implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,8 +20,6 @@ class TaskAdded implements ShouldBroadcast
     public $task;
 
     /**
-     * Create a new event instance.
-     *
      * @return void
      */
     public function __construct(Task $task)
