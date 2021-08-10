@@ -7,16 +7,25 @@
 
 .alert-area {
     position: absolute;
-    width: 18rem;
+    width: 20rem;
     top: 20px;
     right: 20px;
     max-height: calc(100vh - 50px);
     min-height: calc(100vh - 50px);
     overflow-y: auto;
-    .alert-box {
+    .alert-body {
         box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
-        border-radius: 10px;
-        margin-bottom: 10px;
+        .alert-box {
+            border-radius: 10px;
+            margin-bottom: 10px;
+            .clock-icon {
+                font-size: 2rem;
+                border-radius: 10px;
+                width: 45px;
+                height: 45px;
+                line-height: 0;
+            }
+        }
     }
 }
 

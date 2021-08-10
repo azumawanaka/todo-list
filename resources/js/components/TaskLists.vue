@@ -69,13 +69,7 @@
         mounted() {
             Echo.private('todo')
             .listen('TaskReminder', e => {
-                this.reminderTasks.push({
-                    'summary': e.task.summary,
-                    'description': e.task.description,
-                    'taskId': e.task.id,
-                    'userId': e.task.user_id,
-                    'remind': e.task.remind,
-                });
+                this.reminderTasks.push(e.task);
             });
         },
         created() {

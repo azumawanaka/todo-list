@@ -2129,13 +2129,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     Echo["private"]('todo').listen('TaskReminder', function (e) {
-      _this.reminderTasks.push({
-        'summary': e.task.summary,
-        'description': e.task.description,
-        'taskId': e.task.id,
-        'userId': e.task.user_id,
-        'remind': e.task.remind
-      });
+      _this.reminderTasks.push(e.task);
     });
   },
   created: function created() {
@@ -2207,8 +2201,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['reminderTasks']
+  props: ['reminderTasks'],
+  data: function data() {
+    return {
+      remind: true
+    };
+  },
+  methods: {
+    updateReminder: function updateReminder(task, remind) {
+      var _this = this;
+
+      task.remind = remind;
+      task.due_date = task.due_date;
+      axios.put("/tasks/".concat(task.id), task).then(function (response) {
+        _this.remind = false;
+      })["catch"](function (error) {
+        if (error.response && error.response.data) {
+          console.log(error.response.data.errors);
+        }
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -66892,26 +66913,50 @@ var render = function() {
     "div",
     { staticClass: "alert-area" },
     _vm._l(_vm.reminderTasks, function(task) {
-      return !task.remind
-        ? _c("div", { staticClass: "card alert-box" }, [
-            _c("div", { staticClass: "card-body" }, [
-              _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
-                _vm._v(_vm._s(task.summary))
+      return _vm.remind
+        ? _c("div", { staticClass: "alert-body shadow-sm rounded border" }, [
+            _c("div", { staticClass: "alert-box d-flex px-2 py-3" }, [
+              _c("div", { staticClass: "col-md-9" }, [
+                _c("h5", { staticClass: "font-weight-bolder" }, [
+                  _vm._v(_vm._s(task.summary))
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "mb-0" }, [
+                  _vm._v(_vm._s(task.description))
+                ])
               ]),
               _vm._v(" "),
-              _c("p", { staticClass: "card-text" }, [
-                _vm._v(_vm._s(task.description))
-              ]),
+              _vm._m(0, true)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "alert-footer p-2 text-right bg-light" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "text-dark",
+                  attrs: { href: "javascript:void(0)" },
+                  on: {
+                    click: function($event) {
+                      return _vm.updateReminder(task, 2)
+                    }
+                  }
+                },
+                [_c("small", [_vm._v("Skip")])]
+              ),
               _vm._v(" "),
               _c(
                 "a",
-                { staticClass: "card-link text-muted", attrs: { href: "#" } },
-                [_vm._v("Skip")]
-              ),
-              _vm._v(" "),
-              _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-                _vm._v("Remind me later")
-              ])
+                {
+                  staticClass: "text-dark",
+                  attrs: { href: "javascript:void(0)" },
+                  on: {
+                    click: function($event) {
+                      return _vm.updateReminder(task, 0)
+                    }
+                  }
+                },
+                [_c("small", [_vm._v("Remind me later")])]
+              )
             ])
           ])
         : _vm._e()
@@ -66919,7 +66964,23 @@ var render = function() {
     0
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 d-flex align-items-center" }, [
+      _c(
+        "span",
+        {
+          staticClass:
+            "clock-icon bg-warning d-flex align-items-center  justify-content-center"
+        },
+        [_c("i", { staticClass: "fa fa-clock-o" })]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 

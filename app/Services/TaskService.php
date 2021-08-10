@@ -37,12 +37,13 @@ class TaskService
         if ($request->completed_at === null) {
             $task->summary = $request->summary;
             $task->description = $request->description;
-            $task->due_date = $request->due_date;
+            $task->due_date = $request->remind !== null ? $task->due_date : $request->due_date;
+            $task->remind = $request->remind;
         } else {
-            if ($task->completed_at === null) {
-                $task->completed_at = Carbon::now();
-            } else {
+            if ($task->completed_at !== null) {
                 $task->completed_at = null;
+            } else {
+                $task->completed_at = Carbon::now();
             }
         }
 
@@ -69,7 +70,7 @@ class TaskService
         return Task::where('due_date', '>=', $now->toDateTimeString())
             ->where('due_date', '<=', $now->addMinutes(5)->toDateTimeString())
             ->whereNull('completed_at')
-            ->where('remind', 0)
+            ->where('remind', '!=', 2)
             ->get();
     }
 

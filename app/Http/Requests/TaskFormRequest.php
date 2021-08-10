@@ -13,15 +13,15 @@ class TaskFormRequest extends AbstractFormRequest
     {
         return [
             'summary' => [
-                'required',
+                'filled',
                 'max:255',
             ],
             'description' => [
-                'required',
+                'filled',
                 'max:255',
             ],
             'due_date' => [
-                'required',
+                'filled',
             ],
         ];
     }

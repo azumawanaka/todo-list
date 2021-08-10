@@ -9,8 +9,8 @@ class RemindedTask implements ShouldQueue
 {
     public function handle(TaskReminder $event)
     {
-        $event->task->update([
-            'remind' => 0,
-        ]);
+        // $event->task->update([
+        //     'remind' => 0,
+        // ]);
     }
 }
