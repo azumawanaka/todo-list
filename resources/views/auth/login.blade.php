@@ -41,8 +41,9 @@
                 @endif
 
                 <div class="form-group row mb-0 mt-3">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-dark btn-block">
+                    <div class="col-md-12 text-right text-dark">
+                        <p>No account yet? <a href="{{ route('register') }}">{{ __('Register now') }}</a></p>
+                        <button type="submit" class="btn btn-dark btn-block mt-2">
                             {{ __('Login') }}
                         </button>
                     </div>
