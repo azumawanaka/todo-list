@@ -2,7 +2,6 @@
     <div>
         <div class="users" v-if="!taskVisibility">
             <h1 class="h3 mb-4 text-gray-800">Users</h1>
-
             <div class="table-responsive py-5 bg-white">
                 <table class="table table-hover">
                     <thead>
@@ -12,7 +11,7 @@
                         <th class="px-4"></th>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users">
+                        <tr v-for="user in users.data" :key="user.id">
                             <td class="px-4">{{ user.name }} <small class="text-muted d-block">Active {{ user.last_login_human }}</small></td>
                             <td class="px-4">{{ user.tasks_count }}</td>
                             <td class="px-4">{{ user.last_update_human }} <small class="text-muted d-block">{{ user.last_update_time_human }}</small></td>
@@ -23,7 +22,8 @@
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                                    class="text-muted">
+                                    class="text-muted"
+                                    v-if="user.tasks_count > 0">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary">
@@ -33,6 +33,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <pagination v-on:paginateUser:paginate="paginatePage" :users="users" :limit="limit" :currentPage="currentPage"></pagination>
             </div>
         </div>
 
@@ -46,10 +47,12 @@
         props: ['visible'],
         data() {
             return {
-                users: [],
+                users: {},
                 userTasks: [],
                 user: [],
-                taskVisibility: false
+                taskVisibility: false,
+                limit: 5,
+                currentPage: 1,
             }
         },
         mounted() {
@@ -65,8 +68,11 @@
         },
         methods: {
             userLists() {
-                axios.get('/users').then(response => {
+                axios.get(`/users?page=${this.currentPage}&limit=${this.limit}`).then(response => {
                     this.users = response.data;
+                    return response.data;
+                }).then(data => {
+                    this.users = data;
                 });
             },
             checkTasks(user) {
@@ -85,6 +91,10 @@
             },
             updateUserTasks(tasks) {
                 this.userTasks = tasks;
+            },
+            paginatePage(data) {
+                this.users = data;
+                this.currentPage = data.current_page;
             }
         }
     };

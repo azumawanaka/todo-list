@@ -4,6 +4,7 @@ window.Vue = require('vue').default;
 
 Vue.use(require('vue-moment'));
 
+Vue.component('pagination', require('./components/Pagination.vue').default);
 Vue.component('task-lists', require('./components/TaskLists.vue').default);
 Vue.component('task-form', require('./components/TaskForm.vue').default);
 Vue.component('edit-form', require('./components/EditForm.vue').default);

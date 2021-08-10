@@ -11,7 +11,7 @@ use App\Models\User;
  */
 class UserService
 {
-    public function getUsers()
+    public function getUsers($request): ?LengthAwarePaginator
     {
         return User::select([
                 'users.id as uId',
@@ -21,6 +21,6 @@ class UserService
             ])
             ->withCount('tasks')
             ->where('users.role', 0)
-            ->get();
+            ->paginate($request->limit);
     }
 }

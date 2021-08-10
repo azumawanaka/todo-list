@@ -27,6 +27,7 @@
     "dependencies": {
         "laravel-echo": "^1.11.0",
         "pusher-js": "^7.0.3",
-        "vue-moment": "^4.1.0"
+        "vue-moment": "^4.1.0",
+        "watch": "^1.0.2"
     }
 }

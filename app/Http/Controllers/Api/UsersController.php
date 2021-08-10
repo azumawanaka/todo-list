@@ -27,10 +27,10 @@ class UsersController extends Controller
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userService->getUsers();
-        return response($users);
+        $users = $this->userService->getUsers($request);
+        return response()->json($users);
     }
 
     /**
