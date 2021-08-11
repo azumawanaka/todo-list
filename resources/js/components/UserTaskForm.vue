@@ -50,7 +50,7 @@
     import moment from 'moment';
 
     export default {
-        props: ["user"],
+        props: ["user", "limit", "currentPage"],
         data() {
             return {
                task: {
@@ -70,7 +70,8 @@
         methods: {
             createTask(e) {
                 e.preventDefault()
-                axios.post('/users', this.task).then(response => {
+                axios.post(`/users?page=${this.currentPage}&limit=${this.limit}`, this.task)
+                .then(response => {
                     this.$emit('task:created', response.data)
 
                     $('#userTask').modal('toggle')

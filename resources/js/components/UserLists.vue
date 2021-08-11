@@ -22,8 +22,7 @@
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                                    class="text-muted"
-                                    v-if="user.tasks_count > 0">
+                                    class="text-muted">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-primary">
@@ -48,7 +47,7 @@
         data() {
             return {
                 users: {},
-                userTasks: [],
+                userTasks: {},
                 user: [],
                 taskVisibility: false,
                 limit: 5,
@@ -78,11 +77,11 @@
             checkTasks(user) {
                 this.taskVisibility = true;
                 this.user = user;
-                axios.get(`/users/${user.uId}`).then(response => {
+                axios.get(`/users/${user.uId}?page=${this.currentPage}&limit=${this.limit}`).then(response => {
                     this.userTasks = response.data;
-                })
-                .catch(function (error) {
-                    // let $err = error.response.data.errors
+                    return response.data;
+                }).then(data => {
+                    this.userTasks = data;
                 });
             },
             backToList() {

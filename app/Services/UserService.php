@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 /**

@@ -14,7 +14,7 @@
                     <th class="px-4"></th>
                 </thead>
                 <tbody>
-                    <tr v-for="task in userTasks">
+                    <tr v-for="task in tasks.data">
                         <td class="px-4">{{ task.summary }} <small class="text-muted d-block">Active {{ task.updated_at_human }}</small></td>
                         <td class="px-4">{{ task.completed_at != null ? 'Completed' : 'Incomplete' }}</td>
                         <td class="px-4">{{ task.due_date_carbon }} <small class="text-muted d-block">{{ task.due_date_time_carbon }}</small></td>
@@ -26,9 +26,11 @@
                     </tr>
                 </tbody>
             </table>
+
+            <user-task-pagination v-on:paginateTaskList:paginate="paginatePage" :tasks="tasks" :limit="limit" :user="user" :currentPage="currentPage"></user-task-pagination>
         </div>
 
-        <user-task-form v-on:task:created="taskCreated" :user="user"></user-task-form>
+        <user-task-form v-on:task:created="taskCreated" :user="user" :currentPage="currentPage" :limit="limit"></user-task-form>
     </div>
 </template>
 
@@ -36,7 +38,16 @@
     export default {
         props: ['userTasks', 'user', 'visible'],
         data() {
-            return {}
+            return {
+                limit: 5,
+                currentPage: 1,
+                tasks: {},
+            }
+        },
+        watch: {
+            userTasks: function () {
+                this.tasks = this.userTasks
+            }
         },
         created() {
             Echo.private('todo').listen('TaskUpdated', e => {
@@ -48,7 +59,7 @@
         },
         methods: {
             tasksLists() {
-                axios.get(`/users/${this.user.uId}`).then(response => {
+                axios.get(`/users/${this.user.uId}?page=${this.currentPage}&limit=${this.limit}`).then(response => {
                     this.$emit("userTasks:tasks", response.data);
                 });
             },
@@ -59,7 +70,14 @@
                 this.user = user;
             },
             taskCreated(task) {
-                this.userTasks = task;
+                this.tasks = task;
+                this.currentPage = task.current_page;
+                this.limit = task.limit;
+            },
+            paginatePage(task) {
+                this.tasks = task;
+                this.currentPage = task.current_page;
+                this.limit = task.limit;
             }
         }
     };

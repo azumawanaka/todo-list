@@ -5,7 +5,7 @@
                 <option v-for="row in pageRows" :value="row" :key="row">{{ row }}</option>
             </select>
         </div>
-        <span class="mr-4 text-muted">{{ users.from }} - {{ users.to }} of {{ users.total }}</span>
+        <span class="mr-4 text-muted">{{ tasks.from }} - {{ tasks.to }} of {{ tasks.total }}</span>
         <div>
             <a href="#" @click="prevPage" class="prevNext text-dark"><i class="fa fa-angle-left"></i></a>
             <a href="#" @click="nextPage" class="prevNext text-dark"><i class="fa fa-angle-right"></i></a>
@@ -16,7 +16,7 @@
 <script>
 
 export default {
-    props: ["users", "limit", "currentPage"],
+    props: ["tasks", "limit", "currentPage", "user"],
     data() {
         return {
             pageRows: [5, 10, 15],
@@ -38,20 +38,21 @@ export default {
             this.changePage(this.current, this.limits);
         },
         prevPage() {
-            if (this.currentPage > 1) {
+            if (this.current > 1) {
                 this.current--;
                 this.changePage(this.current, this.limits);
             }
         },
         nextPage() {
-            if (this.users.last_page > this.currentPage) {
+            if (this.tasks.last_page > this.current) {
                 this.current++;
                 this.changePage(this.current, this.limits);
             }
         },
         changePage(currentPage, limit) {
-            axios.get(`/users?page=${currentPage}&limit=${limit}`).then(response => {
-                this.$emit('paginateUser:paginate', response.data);
+            axios.get(`/users/${this.user.uId}?page=${currentPage}&limit=${limit}`)
+            .then(response => {
+                this.$emit('paginateTaskList:paginate', response.data);
             });
         }
     }

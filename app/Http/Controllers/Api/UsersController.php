@@ -42,17 +42,17 @@ class UsersController extends Controller
 
         broadcast(new TaskAdded($task))->toOthers();
 
-        $tasks = $this->taskService->getTaskByUserId($request->id);
-        return response($tasks);
+        $tasks = $this->taskService->getTaskByUserId($request->id, $request);
+        return response()->json($tasks);
     }
 
     /**
      * @return \Illuminate\Http\Response
      */
-    public function show(int $userId)
+    public function show(int $userId, Request $request)
     {
-        $tasks = $this->taskService->getTaskByUserId($userId);
-        return response($tasks);
+        $tasks = $this->taskService->getTaskByUserId($userId, $request);
+        return response()->json($tasks);
     }
 
     /**

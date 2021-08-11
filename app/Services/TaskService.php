@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Task;
 use Carbon\Carbon;
 
@@ -10,9 +11,11 @@ use Carbon\Carbon;
  */
 class TaskService
 {
-    public function getTaskByUserId(int $userId)
+    public function getTaskByUserId(int $userId, $request): ?LengthAwarePaginator
     {
-        return Task::where('user_id', $userId)->orderBy('updated_at', 'DESC')->get();
+        return Task::where('user_id', $userId)
+            ->orderBy('updated_at', 'DESC')
+            ->paginate($request->limit);
     }
 
     public function getTaskByTaskId(int $taskId)
