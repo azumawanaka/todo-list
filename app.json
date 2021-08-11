@@ -1,0 +1,6 @@
+{
+  "name": "Start on Heroku: PHP",
+  "description": "Simple todo list application.",
+  "repository": "https://github.com/azumawanaka/todo-list",
+  "addons": []
+}
